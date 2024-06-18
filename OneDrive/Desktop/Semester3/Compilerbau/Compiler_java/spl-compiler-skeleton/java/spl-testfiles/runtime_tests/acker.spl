@@ -1,0 +1,27 @@
+//
+// acker.spl -- Ackermann's function
+//
+
+
+
+proc main() {
+  var i: int;
+  var j: int;
+  var k: int;
+
+  i := 0;
+  while (i <= 3) {
+    j := 0;
+    while (j <= 6) {
+   //   ackermann(i, j, k);
+      printi(i);
+      printc(' ');
+      printi(j);
+      printc(' ');
+      printi(k);
+      printc('\n');
+      j := j + 1;
+    }
+    i := i + 1;
+  }  
+}

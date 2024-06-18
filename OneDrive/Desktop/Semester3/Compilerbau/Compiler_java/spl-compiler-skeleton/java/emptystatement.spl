@@ -1,0 +1,6 @@
+proc example() {
+    var x: int;
+    x := 5;
+    ; // Leere Anweisung, die nichts bewirkt
+    x := x + 1;
+}

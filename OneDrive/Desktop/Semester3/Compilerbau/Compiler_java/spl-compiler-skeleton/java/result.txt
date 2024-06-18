@@ -1,0 +1,56 @@
+TOKEN = PROC in line 1, column 1
+TOKEN = error in line 1, column 5
+TOKEN = IDENT in line 1, column 6, value = "main"
+TOKEN = LPAREN in line 1, column 10
+TOKEN = RPAREN in line 1, column 11
+TOKEN = LCURL in line 1, column 12
+TOKEN = IDENT in line 2, column 5, value = "printc"
+TOKEN = LPAREN in line 2, column 11
+TOKEN = error in line 2, column 12
+TOKEN = RPAREN in line 2, column 13
+TOKEN = SEMIC in line 2, column 14
+TOKEN = IDENT in line 3, column 5, value = "getHallo"
+TOKEN = LPAREN in line 3, column 13
+TOKEN = RPAREN in line 3, column 14
+TOKEN = SEMIC in line 3, column 15
+TOKEN = RCURL in line 4, column 1
+TOKEN = PROC in line 6, column 1
+TOKEN = error in line 6, column 5
+TOKEN = IDENT in line 6, column 6, value = "getHallo"
+TOKEN = LPAREN in line 6, column 14
+TOKEN = RPAREN in line 6, column 15
+TOKEN = LCURL in line 6, column 16
+TOKEN = IDENT in line 7, column 5, value = "printc"
+TOKEN = LPAREN in line 7, column 11
+TOKEN = error in line 7, column 12
+TOKEN = RPAREN in line 7, column 13
+TOKEN = SEMIC in line 7, column 14
+TOKEN = RCURL in line 8, column 1
+TOKEN = EOF
+
+
+
+
+
+procedure ::= PROC IDENT LPAREN parameterList RPAREN LCURL declarationList statementList RCURL;
+parameterList ::= /* epsilon */
+                 | nonEmptyParameterList;
+nonEmptyParameterList ::= parameter
+                        | nonEmptyParameterList COMMA parameter;
+parameter ::= IDENT COLON type
+            | REF IDENT COLON type;
+
+declarationList ::= /* epsilon */
+                   | nonEmptyDeclarationList;
+nonEmptyDeclarationList ::= declaration
+                          | nonEmptyDeclarationList declaration;
+declaration ::= VAR IDENT COLON type SEMIC;
+
+statementList ::= /* epsilon */
+                 | nonEmptyStatementList;
+nonEmptyStatementList ::= statement
+                        | nonEmptyStatementList statement;
+
+statement ::= IDENT ASSIGN expression SEMIC  // Zuweisungen
+            | controlStructure               // Kontrollstrukturen wie if, while
+            | procedureCall SEMIC;           // Aufruf anderer Prozeduren

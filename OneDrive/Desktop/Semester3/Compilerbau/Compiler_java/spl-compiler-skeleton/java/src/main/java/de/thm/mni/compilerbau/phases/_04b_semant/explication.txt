@@ -1,0 +1,93 @@
+Lors de l'analyse sémantique, plusieurs types de nœuds de l'arbre syntaxique abstrait (AST) doivent être considérés pour vérifier les différentes règles sémantiques. Voici une liste des principaux nœuds qui sont généralement impliqués dans l'analyse sémantique et les vérifications associées :
+
+Program (Programme) :
+
+Contient toutes les définitions globales. L'analyse sémantique doit commencer ici pour parcourir toutes les définitions.
+TypeDefinition (Définition de Type) :
+
+Vérifie que les types définis sont valides et ajoute ces types à la table des symboles.
+ProcedureDefinition (Définition de Procédure) :
+
+Vérifie les déclarations de procédure, les paramètres et les variables locales. Ajoute les entrées correspondantes à la table des symboles et vérifie les portées locales.
+ParameterDeclaration (Déclaration de Paramètre) :
+
+Vérifie les paramètres de procédure et assure que les types sont corrects.
+VariableDeclaration (Déclaration de Variable) :
+
+Vérifie les déclarations de variables et assure que chaque variable a un type défini.
+AssignStatement (Instruction d'Affectation) :
+
+Vérifie que le type de l'expression sur le côté droit de l'affectation correspond au type de la variable sur le côté gauche.
+IfStatement (Instruction Conditionnelle) :
+
+Vérifie que l'expression conditionnelle est de type booléen et vérifie les portées des variables dans les branches de l'instruction.
+WhileStatement (Boucle Tant Que) :
+
+Vérifie que l'expression conditionnelle de la boucle est de type booléen.
+ProcedureCall (Appel de Procédure) :
+
+Vérifie que la procédure appelée est définie et que les arguments passés correspondent aux paramètres en termes de nombre et de type.
+BinaryExpression (Expression Binaire) :
+
+Vérifie les types des opérandes pour assurer que l'opération est valide (par exemple, additionner deux entiers).
+UnaryExpression (Expression Una) :
+
+Vérifie le type de l'opérande pour assurer que l'opération unaire est valide (par exemple, la négation).
+ArrayAccess (Accès à un Tableau) :
+
+Vérifie que l'index utilisé pour accéder au tableau est de type entier et que l'accès est dans les limites du tableau.
+ReturnStatement (Instruction de Retour) :
+
+Vérifie que le type de l'expression retournée correspond au type de retour de la procédure.
+Exemples de Méthodes dans SemanticAnalyzer
+Voici quelques exemples de méthodes de SemanticAnalyzer qui gèrent ces nœuds :
+
+Exemple pour les AssignStatement :
+
+java
+Copier le code
+@Override
+public void visit(AssignStatement assignStatement) {
+    Type lhsType = getType(assignStatement.variable, globalTable);
+    Type rhsType = getType(assignStatement.expression, globalTable);
+    if (!lhsType.equals(rhsType)) {
+        throw SplError.TypeMismatch(assignStatement.position);
+    }
+}
+Exemple pour les IfStatement :
+
+java
+Copier le code
+@Override
+public void visit(IfStatement ifStatement) {
+    Type conditionType = getType(ifStatement.condition, globalTable);
+    if (!conditionType.equals(Type.BOOL)) {
+        throw SplError.ConditionNotBoolean(ifStatement.position);
+    }
+    ifStatement.thenPart.accept(this);
+    if (ifStatement.elsePart != null) {
+        ifStatement.elsePart.accept(this);
+    }
+}
+Exemple pour les ProcedureCall :
+
+java
+Copier le code
+@Override
+public void visit(ProcedureCall procedureCall) {
+    Entry entry = globalTable.lookup(procedureCall.procedureName, SplError.UndefinedIdentifier(procedureCall.position, procedureCall.procedureName));
+    if (!(entry instanceof ProcedureEntry)) {
+        throw SplError.NotAProcedure(procedureCall.position, procedureCall.procedureName);
+    }
+    ProcedureEntry procedureEntry = (ProcedureEntry) entry;
+    if (procedureCall.arguments.size() != procedureEntry.parameterTypes.size()) {
+        throw SplError.ArgumentCountMismatch(procedureCall.position);
+    }
+    for (int i = 0; i < procedureCall.arguments.size(); i++) {
+        Type argType = getType(procedureCall.arguments.get(i), globalTable);
+        Type paramType = procedureEntry.parameterTypes.get(i).type;
+        if (!argType.equals(paramType)) {
+            throw SplError.ArgumentTypeMismatch(procedureCall.position);
+        }
+    }
+}

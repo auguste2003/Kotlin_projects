@@ -1,0 +1,8 @@
+
+type arr = array[5] of int ;  // Déclarer le type de l'array
+
+proc table(a:int){
+    // Eingabe von zwei Zahlen und Ausgabe von Summe
+
+
+}

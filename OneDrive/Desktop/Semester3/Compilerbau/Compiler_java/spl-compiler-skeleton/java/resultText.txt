@@ -1,0 +1,624 @@
+TOKEN = TYPE in line 2, column 1
+TOKEN = error in line 2, column 5
+TOKEN = IDENT in line 2, column 6, value = "A8"
+TOKEN = error in line 2, column 8
+TOKEN = ASGN in line 2, column 9
+TOKEN = error in line 2, column 10
+TOKEN = ARRAY in line 2, column 11
+TOKEN = error in line 2, column 16
+TOKEN = LBRACK in line 2, column 17
+TOKEN = error in line 2, column 18
+TOKEN = RBRACK in line 2, column 19
+TOKEN = error in line 2, column 20
+TOKEN = OF in line 2, column 21
+TOKEN = error in line 2, column 23
+TOKEN = IDENT in line 2, column 24, value = "int"
+TOKEN = SEMIC in line 2, column 27
+TOKEN = TYPE in line 3, column 1
+TOKEN = error in line 3, column 5
+TOKEN = IDENT in line 3, column 6, value = "A15"
+TOKEN = error in line 3, column 9
+TOKEN = ASGN in line 3, column 10
+TOKEN = error in line 3, column 11
+TOKEN = ARRAY in line 3, column 12
+TOKEN = error in line 3, column 17
+TOKEN = LBRACK in line 3, column 18
+TOKEN = INTLIT in line 3, column 19, value = 15
+TOKEN = RBRACK in line 3, column 21
+TOKEN = error in line 3, column 22
+TOKEN = OF in line 3, column 23
+TOKEN = error in line 3, column 25
+TOKEN = IDENT in line 3, column 26, value = "int"
+TOKEN = SEMIC in line 3, column 29
+TOKEN = PROC in line 4, column 1
+TOKEN = error in line 4, column 5
+TOKEN = IDENT in line 4, column 6, value = "main"
+TOKEN = LPAREN in line 4, column 10
+TOKEN = RPAREN in line 4, column 11
+TOKEN = error in line 4, column 12
+TOKEN = LCURL in line 4, column 13
+TOKEN = VAR in line 5, column 5
+TOKEN = error in line 5, column 8
+TOKEN = IDENT in line 5, column 9, value = "row"
+TOKEN = COLON in line 5, column 12
+TOKEN = error in line 5, column 13
+TOKEN = IDENT in line 5, column 14, value = "A8"
+TOKEN = SEMIC in line 5, column 16
+TOKEN = VAR in line 6, column 5
+TOKEN = error in line 6, column 8
+TOKEN = IDENT in line 6, column 9, value = "col"
+TOKEN = COLON in line 6, column 12
+TOKEN = error in line 6, column 13
+TOKEN = IDENT in line 6, column 14, value = "A8"
+TOKEN = SEMIC in line 6, column 16
+TOKEN = VAR in line 7, column 5
+TOKEN = error in line 7, column 8
+TOKEN = IDENT in line 7, column 9, value = "diag1"
+TOKEN = COLON in line 7, column 14
+TOKEN = error in line 7, column 15
+TOKEN = IDENT in line 7, column 16, value = "A15"
+TOKEN = SEMIC in line 7, column 19
+TOKEN = VAR in line 8, column 5
+TOKEN = error in line 8, column 8
+TOKEN = IDENT in line 8, column 9, value = "diag2"
+TOKEN = COLON in line 8, column 14
+TOKEN = error in line 8, column 15
+TOKEN = IDENT in line 8, column 16, value = "A15"
+TOKEN = SEMIC in line 8, column 19
+TOKEN = VAR in line 9, column 5
+TOKEN = error in line 9, column 8
+TOKEN = error in line 9, column 9
+TOKEN = COLON in line 9, column 10
+TOKEN = error in line 9, column 11
+TOKEN = IDENT in line 9, column 12, value = "int"
+TOKEN = SEMIC in line 9, column 15
+TOKEN = error in line 10, column 5
+TOKEN = error in line 10, column 6
+TOKEN = COLON in line 10, column 7
+TOKEN = ASGN in line 10, column 8
+TOKEN = error in line 10, column 9
+TOKEN = error in line 10, column 10
+TOKEN = SEMIC in line 10, column 11
+TOKEN = WHILE in line 11, column 5
+TOKEN = error in line 11, column 10
+TOKEN = LPAREN in line 11, column 11
+TOKEN = error in line 11, column 12
+TOKEN = error in line 11, column 13
+TOKEN = LT in line 11, column 14
+TOKEN = error in line 11, column 15
+TOKEN = error in line 11, column 16
+TOKEN = RPAREN in line 11, column 17
+TOKEN = error in line 11, column 18
+TOKEN = LCURL in line 11, column 19
+TOKEN = IDENT in line 12, column 9, value = "row"
+TOKEN = LBRACK in line 12, column 12
+TOKEN = error in line 12, column 13
+TOKEN = RBRACK in line 12, column 14
+TOKEN = error in line 12, column 15
+TOKEN = COLON in line 12, column 16
+TOKEN = ASGN in line 12, column 17
+TOKEN = error in line 12, column 18
+TOKEN = error in line 12, column 19
+TOKEN = SEMIC in line 12, column 20
+TOKEN = IDENT in line 13, column 9, value = "col"
+TOKEN = LBRACK in line 13, column 12
+TOKEN = error in line 13, column 13
+TOKEN = RBRACK in line 13, column 14
+TOKEN = error in line 13, column 15
+TOKEN = COLON in line 13, column 16
+TOKEN = ASGN in line 13, column 17
+TOKEN = error in line 13, column 18
+TOKEN = error in line 13, column 19
+TOKEN = SEMIC in line 13, column 20
+TOKEN = error in line 14, column 9
+TOKEN = error in line 14, column 10
+TOKEN = COLON in line 14, column 11
+TOKEN = ASGN in line 14, column 12
+TOKEN = error in line 14, column 13
+TOKEN = error in line 14, column 14
+TOKEN = error in line 14, column 15
+TOKEN = PLUS in line 14, column 16
+TOKEN = error in line 14, column 17
+TOKEN = error in line 14, column 18
+TOKEN = SEMIC in line 14, column 19
+TOKEN = RCURL in line 15, column 5
+TOKEN = error in line 16, column 5
+TOKEN = error in line 16, column 6
+TOKEN = COLON in line 16, column 7
+TOKEN = ASGN in line 16, column 8
+TOKEN = error in line 16, column 9
+TOKEN = error in line 16, column 10
+TOKEN = SEMIC in line 16, column 11
+TOKEN = WHILE in line 17, column 5
+TOKEN = error in line 17, column 10
+TOKEN = LPAREN in line 17, column 11
+TOKEN = error in line 17, column 12
+TOKEN = error in line 17, column 13
+TOKEN = LT in line 17, column 14
+TOKEN = error in line 17, column 15
+TOKEN = INTLIT in line 17, column 16, value = 15
+TOKEN = RPAREN in line 17, column 18
+TOKEN = error in line 17, column 19
+TOKEN = LCURL in line 17, column 20
+TOKEN = IDENT in line 18, column 9, value = "diag1"
+TOKEN = LBRACK in line 18, column 14
+TOKEN = error in line 18, column 15
+TOKEN = RBRACK in line 18, column 16
+TOKEN = error in line 18, column 17
+TOKEN = COLON in line 18, column 18
+TOKEN = ASGN in line 18, column 19
+TOKEN = error in line 18, column 20
+TOKEN = error in line 18, column 21
+TOKEN = SEMIC in line 18, column 22
+TOKEN = IDENT in line 19, column 9, value = "diag2"
+TOKEN = LBRACK in line 19, column 14
+TOKEN = error in line 19, column 15
+TOKEN = RBRACK in line 19, column 16
+TOKEN = error in line 19, column 17
+TOKEN = COLON in line 19, column 18
+TOKEN = ASGN in line 19, column 19
+TOKEN = error in line 19, column 20
+TOKEN = error in line 19, column 21
+TOKEN = SEMIC in line 19, column 22
+TOKEN = error in line 20, column 9
+TOKEN = error in line 20, column 10
+TOKEN = COLON in line 20, column 11
+TOKEN = ASGN in line 20, column 12
+TOKEN = error in line 20, column 13
+TOKEN = error in line 20, column 14
+TOKEN = error in line 20, column 15
+TOKEN = PLUS in line 20, column 16
+TOKEN = error in line 20, column 17
+TOKEN = error in line 20, column 18
+TOKEN = SEMIC in line 20, column 19
+TOKEN = RCURL in line 21, column 5
+TOKEN = IDENT in line 22, column 5, value = "try"
+TOKEN = LPAREN in line 22, column 8
+TOKEN = error in line 22, column 9
+TOKEN = error in line 22, column 10
+TOKEN = error in line 22, column 11
+TOKEN = IDENT in line 22, column 12, value = "row"
+TOKEN = error in line 22, column 15
+TOKEN = error in line 22, column 16
+TOKEN = IDENT in line 22, column 17, value = "col"
+TOKEN = error in line 22, column 20
+TOKEN = error in line 22, column 21
+TOKEN = IDENT in line 22, column 22, value = "diag1"
+TOKEN = error in line 22, column 27
+TOKEN = error in line 22, column 28
+TOKEN = IDENT in line 22, column 29, value = "diag2"
+TOKEN = RPAREN in line 22, column 34
+TOKEN = SEMIC in line 22, column 35
+TOKEN = RCURL in line 23, column 1
+TOKEN = PROC in line 25, column 1
+TOKEN = error in line 25, column 5
+TOKEN = IDENT in line 25, column 6, value = "try"
+TOKEN = LPAREN in line 25, column 9
+TOKEN = error in line 25, column 10
+TOKEN = COLON in line 25, column 11
+TOKEN = error in line 25, column 12
+TOKEN = IDENT in line 25, column 13, value = "int"
+TOKEN = error in line 25, column 16
+TOKEN = error in line 25, column 17
+TOKEN = REF in line 25, column 18
+TOKEN = error in line 25, column 21
+TOKEN = IDENT in line 25, column 22, value = "row"
+TOKEN = COLON in line 25, column 25
+TOKEN = error in line 25, column 26
+TOKEN = IDENT in line 25, column 27, value = "A8"
+TOKEN = error in line 25, column 29
+TOKEN = error in line 25, column 30
+TOKEN = REF in line 25, column 31
+TOKEN = error in line 25, column 34
+TOKEN = IDENT in line 25, column 35, value = "col"
+TOKEN = COLON in line 25, column 38
+TOKEN = error in line 25, column 39
+TOKEN = IDENT in line 25, column 40, value = "A8"
+TOKEN = error in line 25, column 42
+TOKEN = error in line 25, column 43
+TOKEN = REF in line 25, column 44
+TOKEN = error in line 25, column 47
+TOKEN = IDENT in line 25, column 48, value = "diag1"
+TOKEN = COLON in line 25, column 53
+TOKEN = error in line 25, column 54
+TOKEN = IDENT in line 25, column 55, value = "A15"
+TOKEN = error in line 25, column 58
+TOKEN = error in line 25, column 59
+TOKEN = REF in line 25, column 60
+TOKEN = error in line 25, column 63
+TOKEN = IDENT in line 25, column 64, value = "diag2"
+TOKEN = COLON in line 25, column 69
+TOKEN = error in line 25, column 70
+TOKEN = IDENT in line 25, column 71, value = "A15"
+TOKEN = RPAREN in line 25, column 74
+TOKEN = error in line 25, column 75
+TOKEN = LCURL in line 25, column 76
+TOKEN = VAR in line 26, column 5
+TOKEN = error in line 26, column 8
+TOKEN = error in line 26, column 9
+TOKEN = COLON in line 26, column 10
+TOKEN = error in line 26, column 11
+TOKEN = IDENT in line 26, column 12, value = "int"
+TOKEN = SEMIC in line 26, column 15
+TOKEN = IF in line 27, column 5
+TOKEN = error in line 27, column 7
+TOKEN = LPAREN in line 27, column 8
+TOKEN = error in line 27, column 9
+TOKEN = error in line 27, column 10
+TOKEN = ASGN in line 27, column 11
+TOKEN = error in line 27, column 12
+TOKEN = error in line 27, column 13
+TOKEN = RPAREN in line 27, column 14
+TOKEN = error in line 27, column 15
+TOKEN = LCURL in line 27, column 16
+TOKEN = IDENT in line 28, column 9, value = "printboard"
+TOKEN = LPAREN in line 28, column 19
+TOKEN = IDENT in line 28, column 20, value = "col"
+TOKEN = RPAREN in line 28, column 23
+TOKEN = SEMIC in line 28, column 24
+TOKEN = RCURL in line 29, column 5
+TOKEN = error in line 29, column 6
+TOKEN = ELSE in line 29, column 7
+TOKEN = error in line 29, column 11
+TOKEN = LCURL in line 29, column 12
+TOKEN = error in line 30, column 9
+TOKEN = error in line 30, column 10
+TOKEN = COLON in line 30, column 11
+TOKEN = ASGN in line 30, column 12
+TOKEN = error in line 30, column 13
+TOKEN = error in line 30, column 14
+TOKEN = SEMIC in line 30, column 15
+TOKEN = WHILE in line 31, column 9
+TOKEN = error in line 31, column 14
+TOKEN = LPAREN in line 31, column 15
+TOKEN = error in line 31, column 16
+TOKEN = error in line 31, column 17
+TOKEN = LT in line 31, column 18
+TOKEN = error in line 31, column 19
+TOKEN = error in line 31, column 20
+TOKEN = RPAREN in line 31, column 21
+TOKEN = error in line 31, column 22
+TOKEN = LCURL in line 31, column 23
+TOKEN = IF in line 32, column 13
+TOKEN = error in line 32, column 15
+TOKEN = LPAREN in line 32, column 16
+TOKEN = IDENT in line 32, column 17, value = "row"
+TOKEN = LBRACK in line 32, column 20
+TOKEN = error in line 32, column 21
+TOKEN = RBRACK in line 32, column 22
+TOKEN = error in line 32, column 23
+TOKEN = ASGN in line 32, column 24
+TOKEN = error in line 32, column 25
+TOKEN = error in line 32, column 26
+TOKEN = RPAREN in line 32, column 27
+TOKEN = error in line 32, column 28
+TOKEN = LCURL in line 32, column 29
+TOKEN = IF in line 33, column 17
+TOKEN = error in line 33, column 19
+TOKEN = LPAREN in line 33, column 20
+TOKEN = IDENT in line 33, column 21, value = "diag1"
+TOKEN = LBRACK in line 33, column 26
+TOKEN = error in line 33, column 27
+TOKEN = error in line 33, column 28
+TOKEN = PLUS in line 33, column 29
+TOKEN = error in line 33, column 30
+TOKEN = error in line 33, column 31
+TOKEN = RBRACK in line 33, column 32
+TOKEN = error in line 33, column 33
+TOKEN = ASGN in line 33, column 34
+TOKEN = error in line 33, column 35
+TOKEN = error in line 33, column 36
+TOKEN = RPAREN in line 33, column 37
+TOKEN = error in line 33, column 38
+TOKEN = LCURL in line 33, column 39
+TOKEN = IF in line 34, column 21
+TOKEN = error in line 34, column 23
+TOKEN = LPAREN in line 34, column 24
+TOKEN = IDENT in line 34, column 25, value = "diag2"
+TOKEN = LBRACK in line 34, column 30
+TOKEN = error in line 34, column 31
+TOKEN = error in line 34, column 32
+TOKEN = PLUS in line 34, column 33
+TOKEN = error in line 34, column 34
+TOKEN = error in line 34, column 35
+TOKEN = error in line 34, column 36
+TOKEN = MINUS in line 34, column 37
+TOKEN = error in line 34, column 38
+TOKEN = error in line 34, column 39
+TOKEN = RBRACK in line 34, column 40
+TOKEN = error in line 34, column 41
+TOKEN = ASGN in line 34, column 42
+TOKEN = error in line 34, column 43
+TOKEN = error in line 34, column 44
+TOKEN = RPAREN in line 34, column 45
+TOKEN = error in line 34, column 46
+TOKEN = LCURL in line 34, column 47
+TOKEN = IDENT in line 36, column 25, value = "row"
+TOKEN = LBRACK in line 36, column 28
+TOKEN = error in line 36, column 29
+TOKEN = RBRACK in line 36, column 30
+TOKEN = error in line 36, column 31
+TOKEN = COLON in line 36, column 32
+TOKEN = ASGN in line 36, column 33
+TOKEN = error in line 36, column 34
+TOKEN = error in line 36, column 35
+TOKEN = SEMIC in line 36, column 36
+TOKEN = IDENT in line 37, column 25, value = "diag1"
+TOKEN = LBRACK in line 37, column 30
+TOKEN = error in line 37, column 31
+TOKEN = error in line 37, column 32
+TOKEN = PLUS in line 37, column 33
+TOKEN = error in line 37, column 34
+TOKEN = error in line 37, column 35
+TOKEN = RBRACK in line 37, column 36
+TOKEN = error in line 37, column 37
+TOKEN = COLON in line 37, column 38
+TOKEN = ASGN in line 37, column 39
+TOKEN = error in line 37, column 40
+TOKEN = error in line 37, column 41
+TOKEN = SEMIC in line 37, column 42
+TOKEN = IDENT in line 38, column 25, value = "diag2"
+TOKEN = LBRACK in line 38, column 30
+TOKEN = error in line 38, column 31
+TOKEN = error in line 38, column 32
+TOKEN = PLUS in line 38, column 33
+TOKEN = error in line 38, column 34
+TOKEN = error in line 38, column 35
+TOKEN = error in line 38, column 36
+TOKEN = MINUS in line 38, column 37
+TOKEN = error in line 38, column 38
+TOKEN = error in line 38, column 39
+TOKEN = RBRACK in line 38, column 40
+TOKEN = error in line 38, column 41
+TOKEN = COLON in line 38, column 42
+TOKEN = ASGN in line 38, column 43
+TOKEN = error in line 38, column 44
+TOKEN = error in line 38, column 45
+TOKEN = SEMIC in line 38, column 46
+TOKEN = IDENT in line 39, column 25, value = "col"
+TOKEN = LBRACK in line 39, column 28
+TOKEN = error in line 39, column 29
+TOKEN = RBRACK in line 39, column 30
+TOKEN = error in line 39, column 31
+TOKEN = COLON in line 39, column 32
+TOKEN = ASGN in line 39, column 33
+TOKEN = error in line 39, column 34
+TOKEN = error in line 39, column 35
+TOKEN = SEMIC in line 39, column 36
+TOKEN = IDENT in line 41, column 25, value = "try"
+TOKEN = LPAREN in line 41, column 28
+TOKEN = error in line 41, column 29
+TOKEN = error in line 41, column 30
+TOKEN = PLUS in line 41, column 31
+TOKEN = error in line 41, column 32
+TOKEN = error in line 41, column 33
+TOKEN = error in line 41, column 34
+TOKEN = error in line 41, column 35
+TOKEN = IDENT in line 41, column 36, value = "row"
+TOKEN = error in line 41, column 39
+TOKEN = error in line 41, column 40
+TOKEN = IDENT in line 41, column 41, value = "col"
+TOKEN = error in line 41, column 44
+TOKEN = error in line 41, column 45
+TOKEN = IDENT in line 41, column 46, value = "diag1"
+TOKEN = error in line 41, column 51
+TOKEN = error in line 41, column 52
+TOKEN = IDENT in line 41, column 53, value = "diag2"
+TOKEN = RPAREN in line 41, column 58
+TOKEN = SEMIC in line 41, column 59
+TOKEN = IDENT in line 43, column 25, value = "row"
+TOKEN = LBRACK in line 43, column 28
+TOKEN = error in line 43, column 29
+TOKEN = RBRACK in line 43, column 30
+TOKEN = error in line 43, column 31
+TOKEN = COLON in line 43, column 32
+TOKEN = ASGN in line 43, column 33
+TOKEN = error in line 43, column 34
+TOKEN = error in line 43, column 35
+TOKEN = SEMIC in line 43, column 36
+TOKEN = IDENT in line 44, column 25, value = "diag1"
+TOKEN = LBRACK in line 44, column 30
+TOKEN = error in line 44, column 31
+TOKEN = error in line 44, column 32
+TOKEN = PLUS in line 44, column 33
+TOKEN = error in line 44, column 34
+TOKEN = error in line 44, column 35
+TOKEN = RBRACK in line 44, column 36
+TOKEN = error in line 44, column 37
+TOKEN = COLON in line 44, column 38
+TOKEN = ASGN in line 44, column 39
+TOKEN = error in line 44, column 40
+TOKEN = error in line 44, column 41
+TOKEN = SEMIC in line 44, column 42
+TOKEN = IDENT in line 45, column 25, value = "diag2"
+TOKEN = LBRACK in line 45, column 30
+TOKEN = error in line 45, column 31
+TOKEN = error in line 45, column 32
+TOKEN = PLUS in line 45, column 33
+TOKEN = error in line 45, column 34
+TOKEN = error in line 45, column 35
+TOKEN = error in line 45, column 36
+TOKEN = MINUS in line 45, column 37
+TOKEN = error in line 45, column 38
+TOKEN = error in line 45, column 39
+TOKEN = RBRACK in line 45, column 40
+TOKEN = error in line 45, column 41
+TOKEN = COLON in line 45, column 42
+TOKEN = ASGN in line 45, column 43
+TOKEN = error in line 45, column 44
+TOKEN = error in line 45, column 45
+TOKEN = SEMIC in line 45, column 46
+TOKEN = RCURL in line 46, column 21
+TOKEN = RCURL in line 47, column 17
+TOKEN = RCURL in line 48, column 13
+TOKEN = error in line 49, column 13
+TOKEN = error in line 49, column 14
+TOKEN = COLON in line 49, column 15
+TOKEN = ASGN in line 49, column 16
+TOKEN = error in line 49, column 17
+TOKEN = error in line 49, column 18
+TOKEN = error in line 49, column 19
+TOKEN = PLUS in line 49, column 20
+TOKEN = error in line 49, column 21
+TOKEN = error in line 49, column 22
+TOKEN = SEMIC in line 49, column 23
+TOKEN = RCURL in line 50, column 9
+TOKEN = RCURL in line 51, column 5
+TOKEN = RCURL in line 52, column 1
+TOKEN = PROC in line 53, column 1
+TOKEN = error in line 53, column 5
+TOKEN = IDENT in line 53, column 6, value = "printboard"
+TOKEN = LPAREN in line 53, column 16
+TOKEN = REF in line 53, column 17
+TOKEN = error in line 53, column 20
+TOKEN = IDENT in line 53, column 21, value = "col"
+TOKEN = COLON in line 53, column 24
+TOKEN = error in line 53, column 25
+TOKEN = IDENT in line 53, column 26, value = "A8"
+TOKEN = RPAREN in line 53, column 28
+TOKEN = error in line 53, column 29
+TOKEN = LCURL in line 53, column 30
+TOKEN = VAR in line 54, column 5
+TOKEN = error in line 54, column 8
+TOKEN = error in line 54, column 9
+TOKEN = COLON in line 54, column 10
+TOKEN = error in line 54, column 11
+TOKEN = IDENT in line 54, column 12, value = "int"
+TOKEN = SEMIC in line 54, column 15
+TOKEN = VAR in line 55, column 5
+TOKEN = error in line 55, column 8
+TOKEN = error in line 55, column 9
+TOKEN = COLON in line 55, column 10
+TOKEN = error in line 55, column 11
+TOKEN = IDENT in line 55, column 12, value = "int"
+TOKEN = SEMIC in line 55, column 15
+TOKEN = error in line 56, column 5
+TOKEN = error in line 56, column 6
+TOKEN = COLON in line 56, column 7
+TOKEN = ASGN in line 56, column 8
+TOKEN = error in line 56, column 9
+TOKEN = error in line 56, column 10
+TOKEN = SEMIC in line 56, column 11
+TOKEN = WHILE in line 57, column 5
+TOKEN = error in line 57, column 10
+TOKEN = LPAREN in line 57, column 11
+TOKEN = error in line 57, column 12
+TOKEN = error in line 57, column 13
+TOKEN = LT in line 57, column 14
+TOKEN = error in line 57, column 15
+TOKEN = error in line 57, column 16
+TOKEN = RPAREN in line 57, column 17
+TOKEN = error in line 57, column 18
+TOKEN = LCURL in line 57, column 19
+TOKEN = error in line 58, column 9
+TOKEN = error in line 58, column 10
+TOKEN = COLON in line 58, column 11
+TOKEN = ASGN in line 58, column 12
+TOKEN = error in line 58, column 13
+TOKEN = error in line 58, column 14
+TOKEN = SEMIC in line 58, column 15
+TOKEN = WHILE in line 59, column 9
+TOKEN = error in line 59, column 14
+TOKEN = LPAREN in line 59, column 15
+TOKEN = error in line 59, column 16
+TOKEN = error in line 59, column 17
+TOKEN = LT in line 59, column 18
+TOKEN = error in line 59, column 19
+TOKEN = error in line 59, column 20
+TOKEN = RPAREN in line 59, column 21
+TOKEN = error in line 59, column 22
+TOKEN = LCURL in line 59, column 23
+TOKEN = IDENT in line 60, column 13, value = "printc"
+TOKEN = LPAREN in line 60, column 19
+TOKEN = error in line 60, column 20
+TOKEN = error in line 60, column 21
+TOKEN = error in line 60, column 22
+TOKEN = RPAREN in line 60, column 23
+TOKEN = SEMIC in line 60, column 24
+TOKEN = IF in line 61, column 13
+TOKEN = error in line 61, column 15
+TOKEN = LPAREN in line 61, column 16
+TOKEN = IDENT in line 61, column 17, value = "col"
+TOKEN = LBRACK in line 61, column 20
+TOKEN = error in line 61, column 21
+TOKEN = RBRACK in line 61, column 22
+TOKEN = error in line 61, column 23
+TOKEN = ASGN in line 61, column 24
+TOKEN = error in line 61, column 25
+TOKEN = error in line 61, column 26
+TOKEN = RPAREN in line 61, column 27
+TOKEN = error in line 61, column 28
+TOKEN = LCURL in line 61, column 29
+TOKEN = IDENT in line 62, column 17, value = "printc"
+TOKEN = LPAREN in line 62, column 23
+TOKEN = error in line 62, column 24
+TOKEN = error in line 62, column 25
+TOKEN = error in line 62, column 26
+TOKEN = RPAREN in line 62, column 27
+TOKEN = SEMIC in line 62, column 28
+TOKEN = IF in line 63, column 17
+TOKEN = error in line 63, column 19
+TOKEN = LPAREN in line 63, column 20
+TOKEN = error in line 63, column 21
+TOKEN = error in line 63, column 22
+TOKEN = ASGN in line 63, column 23
+TOKEN = error in line 63, column 24
+TOKEN = error in line 63, column 25
+TOKEN = RPAREN in line 63, column 29
+TOKEN = LCURL in line 63, column 30
+TOKEN = RCURL in line 65, column 17
+TOKEN = RCURL in line 66, column 13
+TOKEN = error in line 66, column 14
+TOKEN = ELSE in line 66, column 15
+TOKEN = error in line 66, column 19
+TOKEN = LCURL in line 66, column 20
+TOKEN = IDENT in line 67, column 17, value = "printc"
+TOKEN = LPAREN in line 67, column 23
+TOKEN = error in line 67, column 24
+TOKEN = error in line 67, column 25
+TOKEN = error in line 67, column 26
+TOKEN = RPAREN in line 67, column 27
+TOKEN = SEMIC in line 67, column 28
+TOKEN = RCURL in line 68, column 13
+TOKEN = error in line 69, column 13
+TOKEN = error in line 69, column 14
+TOKEN = COLON in line 69, column 15
+TOKEN = ASGN in line 69, column 16
+TOKEN = error in line 69, column 17
+TOKEN = error in line 69, column 18
+TOKEN = error in line 69, column 19
+TOKEN = PLUS in line 69, column 20
+TOKEN = error in line 69, column 21
+TOKEN = error in line 69, column 22
+TOKEN = SEMIC in line 69, column 23
+TOKEN = RCURL in line 70, column 9
+TOKEN = IDENT in line 71, column 9, value = "printc"
+TOKEN = LPAREN in line 71, column 15
+TOKEN = error in line 71, column 16
+TOKEN = error in line 71, column 17
+TOKEN = error in line 71, column 18
+TOKEN = error in line 71, column 19
+TOKEN = RPAREN in line 71, column 20
+TOKEN = SEMIC in line 71, column 21
+TOKEN = error in line 72, column 9
+TOKEN = error in line 72, column 10
+TOKEN = COLON in line 72, column 11
+TOKEN = ASGN in line 72, column 12
+TOKEN = error in line 72, column 13
+TOKEN = error in line 72, column 14
+TOKEN = error in line 72, column 15
+TOKEN = PLUS in line 72, column 16
+TOKEN = error in line 72, column 17
+TOKEN = error in line 72, column 18
+TOKEN = SEMIC in line 72, column 19
+TOKEN = RCURL in line 73, column 5
+TOKEN = IDENT in line 74, column 5, value = "printc"
+TOKEN = LPAREN in line 74, column 11
+TOKEN = error in line 74, column 12
+TOKEN = error in line 74, column 13
+TOKEN = error in line 74, column 14
+TOKEN = error in line 74, column 15
+TOKEN = RPAREN in line 74, column 16
+TOKEN = SEMIC in line 74, column 17
+TOKEN = RCURL in line 75, column 1
+TOKEN = EOF

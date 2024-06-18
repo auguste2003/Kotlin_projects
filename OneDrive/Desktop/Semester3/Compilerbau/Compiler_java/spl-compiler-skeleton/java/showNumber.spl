@@ -1,0 +1,27 @@
+
+type arr = array[5] of int ;  // Déclarer le type de l'array
+proc main(){
+    // Eingabe von zwei Zahlen und Ausgabe von Summe
+    var zahl1:int ;
+    var zahl2:int ;
+    var nombres :arr ; // Dßefiner l'array
+
+    nombres[0]:=3;
+    nombres[1]:=6;
+    nombres[2]:=4;
+    nombres[3]:=9;
+    nombres[4]:=3;
+    zahl1 := 4 ;
+    zahl2 := 5 ;
+
+
+    showNumber(zahl1,zahl2);
+    printc('\n');
+
+}
+// Die Eingaben in einer Methode machen
+proc showNumber(nbr:int , nbr2:int ){
+    printi(nbr+nbr2);
+}
+
+

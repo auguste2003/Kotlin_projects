@@ -1,0 +1,305 @@
+package de.thm.mni.compilerbau.phases._02_03_parser;
+
+import java.util.List;
+import java.util.LinkedList;
+import java_cup.runtime.*;
+import de.thm.mni.compilerbau.phases._01_scanner.Scanner;
+import de.thm.mni.compilerbau.absyn.*;
+import de.thm.mni.compilerbau.absyn.Expression;
+import de.thm.mni.compilerbau.table.Identifier;
+import de.thm.mni.compilerbau.utils.SplError;
+import de.thm.mni.compilerbau.CommandLineOptions;
+
+parser code {:
+  public CommandLineOptions options = null;
+
+  public void syntax_error(Symbol currentToken) {
+    // Apparently there is a cup bug that causes expected_token_ids() to return incorrect results on first call
+    // This is why this call is inserted.
+    this.expected_token_ids();
+    
+    throw SplError.SyntaxError(new Position(currentToken.left, currentToken.right),
+            this.symbl_name_from_id(currentToken.sym),
+            this.expected_token_ids().stream().map(this::symbl_name_from_id).toList());
+  }
+  
+  /**
+   * @return An empty list. (Uses LinkedList)
+   */
+  public static <E> List<E> nil() {
+      return new LinkedList<E>();
+  }
+  
+  /**
+   * Constructs a list from a head and a tail without modifying the tail (Uses LinkedList).
+   * Use this as a helper if you don't want to deal with constructing lists manually.
+   *
+   * @param head The head of the list
+   * @param tail The tail of the list
+   * @return A list containing the head element and all elements of tail
+   */
+  public static <E> List<E> cons(E head, List<E> tail) {
+    List<E> copy = new LinkedList(tail);
+    copy.add(0, head);
+    return copy;
+  }
+:}
+
+/* Terminals/Tokens */
+terminal LBRACK, RBRACK, LPAREN, RPAREN, LCURL, RCURL;         //Braces, parenthesis, brackets
+terminal LT, LE, GT, GE, NE, EQ;                               //Comparison operators
+terminal PLUS, MINUS, STAR, SLASH;                             //Arithmetic operators
+terminal ASGN, COMMA, COLON, SEMIC;                            //Other delimiters
+terminal TYPE, PROC, ARRAY, OF, REF, VAR, IF, ELSE, WHILE;     //Keywords
+
+
+
+
+
+terminal Identifier IDENT;    //Identifiers
+terminal Integer INTLIT;      //Integer literals
+
+
+
+
+/* Non-terminals
+
+ statement_list::= /* epsilon  | statement_list statement;
+ statement::= assign_statement;
+  assign_statement::= IDENT ASGN expression SEMIC;
+  expression::=  expression PLUS term | expression MINUS term | term;
+  term::= term STAR factor | term SLASH factor | factor;
+  factor::=IDENT | INTLIT;
+
+ */
+ // Commentaire
+non terminal Program program;
+non terminal List<GlobalDefinition> globaleDefintionList;
+non terminal GlobalDefinition globaleDefinition ;
+
+non terminal List<Statement> statement_list;
+non terminal Statement statement;
+
+non terminal AssignStatement assign_statement;
+non terminal Expression expression;
+non terminal Expression term;
+
+non terminal Expression factor;
+non terminal CompoundStatement compound_statement ;
+//non terminal Expression operatoren ;
+
+// Typenvereinbarung
+non terminal TypeExpression type ;
+non terminal TypeDefinition typeDefinition;
+
+// while Schleife
+//non terminal WhileStatement while;
+
+non terminal WhileStatement whileStatement ;
+
+
+// if Schleife
+
+
+// proceduren
+non terminal ProcedureDefinition procedure ;
+non terminal IfStatement ifStatement ;
+non terminal Expression conditional_expression ;
+non terminal List<ParameterDefinition> parameterList ; // parameterListe
+non terminal List<ParameterDefinition> nonEmptyParameterList ; // Nicht leere ParamterListe
+non terminal List<ParameterDefinition> restParameters ; // Autres parametres pour faciliter la récursion
+non terminal ParameterDefinition parameter ; // parametre
+non terminal ParameterDefinition normalParameter ; // parametre normal
+non terminal ParameterDefinition refParameter ; // parametre de référence
+
+
+// variablenliste
+non terminal List<VariableDefinition> variablenDefinitionList ;
+non terminal VariableDefinition variableDefinition ;
+// appelle de procedures
+non terminal CallStatement procedure_call ;
+// arguments des procedures
+non terminal List<Expression> arguments ;
+
+non terminal Expression argument ;
+non terminal ArrayAccess array_acces ;
+non terminal Expression atom ;
+non terminal Variable variable ;
+non terminal EmptyStatement emptyStatement ;
+start with program ;
+
+
+//program ::= PROC IDENT LPAREN  RPAREN LCURL RCURL; //TODO (assignment 2 and 3): Just a dummy, needs to be replaced by the actual spl grammar.
+
+//program ::= globaleDefintionList:listDef {:RESULT = new Program(new Position(listDef),listDef);:} ;
+program ::= globaleDefintionList:listDef {:RESULT = new Program(new Position(listDefleft,listDefright),listDef);:} ;
+// Type definition fonktioniert schon
+
+
+globaleDefintionList ::= globaleDefinition:head{: RESULT = cons(head,nil());:}
+                     |  globaleDefinition:head globaleDefintionList:tail{:RESULT = cons(head,tail);:};
+
+globaleDefinition ::= typeDefinition :typ{:RESULT = typ;:} | procedure:proc {: RESULT = proc; :}  ;
+ // Beispiele:
+ // type myInt = int;
+ // type intArray = array [10] of in
+
+typeDefinition ::= TYPE IDENT:id EQ type:typeExpression SEMIC{:RESULT =new TypeDefinition(new Position(idleft, idright), id,typeExpression);:};
+
+type ::= IDENT:id {: RESULT = new NamedTypeExpression(new Position(idleft, idright), id);:}
+       | ARRAY:pos LBRACK INTLIT:size RBRACK OF type:baseType {: RESULT = new ArrayTypeExpression(new Position(posleft, posright), size, baseType);:};
+//  ProcedureDefinition(Position position, Identifier name, List<ParameterDefinition> parameters, List<VariableDefinition> variables, List<Statement> body)
+// procedure
+ procedure::= PROC IDENT:procName LPAREN parameterList:params  RPAREN  LCURL variablenDefinitionList:vars  statement_list:body
+  RCURL{:RESULT=new ProcedureDefinition(new Position(procNameleft,procNameright),procName,params,vars,body);:};
+//procedure::= PROC IDENT LPAREN parameterList  RPAREN  LCURL proc_body RCURL;
+
+//paramtres
+parameterList ::= /* vide */{:RESULT =nil();:} | nonEmptyParameterList:params{:RESULT = params;:}; // pas vide
+nonEmptyParameterList ::= parameter:head restParameters:tail{:RESULT = cons(head,tail);:}; // il peux etre le reste
+parameter ::= normalParameter:np {: RESULT = np; :}
+            | refParameter:rp {: RESULT = rp; :}; // le parametre est normal ou de reférence
+normalParameter ::= IDENT:id COLON IDENT:type
+{: RESULT = new ParameterDefinition(new Position(idleft, idright), id, new NamedTypeExpression(new Position(typeleft, typeright), type), false); :};
+
+refParameter ::= REF IDENT:id COLON IDENT:type
+{: RESULT = new ParameterDefinition(new Position(idleft, idright), id, new NamedTypeExpression(new Position(typeleft, typeright), type), true); :};
+
+restParameters ::= /* vide */{:RESULT =nil();:} | COMMA nonEmptyParameterList:tail{:RESULT = tail;:};  // liste récursive des autres paramètres
+
+// corpds de la méthode
+//proc_body ::= variablenDefinitionList:vars  statement_list ;
+
+// Variable marche
+//  public VariableDefinition(Position position, Identifier name, TypeExpression typeExpression)
+
+variablenDefinitionList ::= /**/{:RESULT =nil();:}| variableDefinition:head variablenDefinitionList:tail{:RESULT = cons(head,tail);:} ;
+variableDefinition ::=  VAR IDENT:varName COLON type:type SEMIC
+{:RESULT = new VariableDefinition(new Position(varNameleft,varNameright),varName,type);:};  // non terminal
+
+// appel dde procedures
+//  CallStatement(Position position, Identifier procedureName, List<Expression> arguments)
+procedure_call ::= IDENT:procName  LPAREN arguments:args RPAREN SEMIC{:RESULT = new CallStatement(new Position(procNameleft,procNameright),procName,args);:}  ;
+arguments::= /**/{:RESULT =nil();:}| argument:arg  COMMA  arguments:tail{:RESULT = cons(arg,tail);:} |argument:head{:RESULT = cons(head,nil());:}; // arguments
+argument ::=   expression:arg{:RESULT = arg;:}  ;
+
+
+//printExpressions::=/**/| printExpression printExpressions ;
+//printExpression ::= /**/| INTLIT printExpressions ;
+
+// a := b + c  sur plusieures lignes marchent
+// statement_list ::= statement:head statement_list:tail{:RESULT = cons(head, tail); :}|/*empty*/ {:RESULT = nil(); :};
+statement_list ::= statement:head statement_list:tail {: RESULT = cons(head, tail); :}
+                 | /* empty */ {: RESULT = nil(); :};
+
+statement ::= assign_statement:assign {: RESULT = assign; :}
+            | whileStatement:whyle {: RESULT = whyle; :}
+            | ifStatement:ifS {: RESULT = ifS; :}
+            | compound_statement:cp {: RESULT = cp; :}
+            | procedure_call:procCall {: RESULT = procCall; :}
+            | emptyStatement:eS {: RESULT = eS; :};
+
+emptyStatement ::=SEMIC : pos {:RESULT = new EmptyStatement(new Position(posleft,posright));:};
+compound_statement ::= LCURL statement_list: stmts  RCURL{: RESULT = new CompoundStatement(new Position(stmtsleft,stmtsright), stmts); :};
+
+assign_statement ::= variable:var ASGN expression:expr SEMIC {:
+                   RESULT = new AssignStatement(new Position(varleft, varright),
+                   var, expr);
+                 :};
+
+ //public BinaryExpression(Position position, Operator operator, Expression leftOperand, Expression rightOperand)
+expression ::= term:head {: RESULT = head; :}
+             | expression:expr  PLUS term:term{:
+                                                     RESULT = new BinaryExpression(new Position(exprleft, exprright), BinaryExpression.Operator.ADD, expr, term);
+                                                   :}
+             | expression:expr  MINUS term:term{:
+                                      RESULT = new BinaryExpression(new Position(exprleft, exprright), BinaryExpression.Operator.SUB, expr, term);
+                                    :}
+             ;
+
+term ::= factor:head {: RESULT = head; :}
+       |  term:lop STAR:op factor:rop {:RESULT = new BinaryExpression(new Position(opleft, opright),   BinaryExpression.Operator.MUL, lop, rop);:}
+       | term:lop  SLASH:op  factor:rop{:RESULT = new BinaryExpression(new Position(opleft, opright),   BinaryExpression.Operator.DIV, lop, rop);:};
+
+factor ::= atom :atomValue {: RESULT = atomValue; :}
+         | MINUS atom:atomValue {: RESULT = new UnaryExpression(new Position(atomValueleft, atomValueright), UnaryExpression.Operator.MINUS, atomValue); :};
+
+/**
+*Fage  : Wie kann ich atom implementieren ?
+*/
+variable::= IDENT:id {:RESULT =new NamedVariable(new Position(idleft, idright),  id); :}
+             | array_acces:array {:RESULT = array;:}
+
+ ;
+// variable ::= array_expressions IDENT| array_expression;
+
+// X = variable
+// b = IDENT
+//  X'= array_expressions
+// a = array_expression
+
+// atom ::= IDENT:id array_expressions : arrays{:RESULT = new NamedVariable(new Position(idleft, idright), id, arrays);:}
+atom ::= variable :var{: RESULT = new  VariableExpression(new Position(varleft , varright),var);:}
+        | INTLIT : size {: RESULT = new IntLiteral(new Position(sizeleft,sizeright),size);:}
+        | LPAREN expression:expr RPAREN  {:RESULT = expr;:};
+
+//array_expressions ::= /* */{:RESULT =nil();:}
+ //                    | array_acess:head array_expressions:tail{:RESULT = cons(head,tail);:};
+
+array_acces  ::= variable:var LBRACK expression :expr RBRACK{:RESULT = new ArrayAccess(new Position(varleft,varright),var,expr);:};
+
+// while und while statement
+
+whileStatement ::= WHILE LPAREN conditional_expression:cond RPAREN statement:stmt
+  {:
+   RESULT = new WhileStatement(new Position(condleft, stmtright), cond, stmt);
+ :};
+
+ // if Schleife
+ // if (x < 0) x := 42;
+ // if (x < 0) x := 42; else x := 43;
+// Ca marche pour une seule ligne
+
+
+/// Frage : Position if und while
+
+
+ifStatement ::= IF LPAREN conditional_expression:cond RPAREN statement :thenStmt
+{:
+  RESULT = new IfStatement(new Position(condleft, condright), cond, thenStmt, new EmptyStatement(new Position(thenStmtleft,thenStmtright)));
+:}
+|
+IF LPAREN conditional_expression:cond RPAREN statement:thenStmt ELSE statement:elseStmt
+ {:
+  RESULT = new IfStatement(new Position(condleft, condright), cond, thenStmt, elseStmt);
+:};
+
+
+
+ conditional_expression ::= expression:exprLeft LT expression:exprRight
+ {:
+   RESULT = new BinaryExpression(new Position(exprLeftleft, exprRightright), BinaryExpression.Operator.LST, exprLeft, exprRight);
+ :}
+                      |expression:exprLeft EQ expression:exprRight
+                       {:
+                        RESULT = new BinaryExpression(new Position(exprLeftleft,exprLeftright), BinaryExpression.Operator.EQU, exprLeft, exprRight);
+                      :}
+                      |expression:exprLeft LE expression:exprRight
+                       {:
+                                              RESULT = new BinaryExpression(new Position(exprLeftleft,exprLeftright), BinaryExpression.Operator.LSE, exprLeft, exprRight);
+                                            :}
+                       |expression:exprLeft GT expression:exprRight
+                        {:
+                                               RESULT = new BinaryExpression(new Position(exprLeftleft,exprLeftright), BinaryExpression.Operator.GRT, exprLeft, exprRight);
+                                             :}
+                       |expression:exprLeft  GE expression:exprRight
+                        {:
+                                               RESULT = new BinaryExpression(new Position(exprLeftleft,exprLeftright), BinaryExpression.Operator.GRE, exprLeft, exprRight);
+                                             :}
+                       |expression:exprLeft  NE  expression:exprRight
+                        {:
+                                               RESULT = new BinaryExpression(new Position(exprLeftleft,exprLeftright), BinaryExpression.Operator.NEQ, exprLeft, exprRight);
+                                             :}
+                       ;
+
+

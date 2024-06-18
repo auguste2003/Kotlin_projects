@@ -1,0 +1,55 @@
+
+type arr = array[5] of int ;  // Déclarer le type de l'array
+proc main(){
+    // Eingabe von zwei Zahlen und Ausgabe von Summe
+    var zahl1:int ;
+    var zahl2:int ;
+    var nombres :arr ; // Dßefiner l'array
+
+    nombres[0]:=3;
+    nombres[1]:=6;
+    nombres[2]:=4;
+    nombres[3]:=9;
+    nombres[4]:=3;
+    zahl1 := 4 ;
+    zahl2 := 5 ;
+
+    printi(zahl1+zahl2);
+    printc('\n');
+
+    sortNumber(nombres);
+    printc('\n');
+
+
+}
+
+// La fonction prend l'array et renvoit un sotiertes Array
+proc sortNumber(ref numbers :arr){
+    var n : int ;
+    var j : int ;
+    var temp : int ;
+    var i : int ; // Pour afficher l'array
+    n:= 0;
+    while (n<5){
+
+        j:= 0;
+        while (j<4){
+            if (numbers[j] > numbers[j + 1]) {
+                // Echange des éléments si l'élément courant est plus grand que l'élément suivant
+                temp := numbers[j];
+                numbers[j] := numbers[j + 1];
+                numbers[j + 1] := temp;
+
+            }
+            j:=j+1;
+        }
+        n:=n+1;
+    }
+
+    i := 0;
+    while(i<5){
+        printi(numbers[i]);
+        printc('\n');
+        i := i+ 1;
+    }
+}
