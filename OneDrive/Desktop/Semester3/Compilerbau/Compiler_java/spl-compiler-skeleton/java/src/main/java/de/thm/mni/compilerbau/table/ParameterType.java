@@ -8,7 +8,7 @@ import de.thm.mni.compilerbau.types.Type;
 public class ParameterType {
     public final Type type;
     public final boolean isReference;
-    public Integer offset = null; // This value has to be set in phase 5
+    public Integer offset = 0; // This value has to be set in phase 5
 
     /**
      * @param type        The semantic type of the parameter. See {@link Type} and its subclasses.

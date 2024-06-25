@@ -4,6 +4,6 @@ proc main(){
 }
 
 proc getHallo(   ){
-    var main : int ;
+var main : int ;
     printc(4);
 }

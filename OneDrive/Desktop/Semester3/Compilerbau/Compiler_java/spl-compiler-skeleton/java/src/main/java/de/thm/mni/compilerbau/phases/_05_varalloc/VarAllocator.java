@@ -6,6 +6,8 @@ import de.thm.mni.compilerbau.table.ParameterType;
 import de.thm.mni.compilerbau.table.ProcedureEntry;
 import de.thm.mni.compilerbau.table.SymbolTable;
 import de.thm.mni.compilerbau.table.VariableEntry;
+import de.thm.mni.compilerbau.types.ArrayType;
+import de.thm.mni.compilerbau.types.Type;
 import de.thm.mni.compilerbau.utils.*;
 
 import java.util.*;
@@ -31,13 +33,97 @@ public class VarAllocator {
     public void allocVars(Program program, SymbolTable table) {
         //TODO (assignment 5): Allocate stack slots for all parameters and local variables
 // Die Methode bekommt das Programm , die Symbole Tabelle und
-        // Die Prozeduren durvhlaufen
+        // Die Prozeduren durchlaufen um für die verschiedenen Variablen und Prozeduren Platz zu allokieren .
         //
-        throw new NotImplemented();
 
+
+        // Wenn es keine ProzedurAufruf vorkommt , outgoingAreaSize = -1
+ // Jeder Type zeigt eine Größe
+        // Jedes Argument jede Parameter , jede lokale Variable speichert ein Offset relativ zum Frame-pointer
+        // Jede Procezedur speichert die Größe von 3 Bereichen
+        // - Eingehende Argumente
+        // - lokale Variablen
+        // - Ausgehende Argumente
+        //  Die Größe des Argumentsbereichs muss man ermitteln und speichern
+        // ECO32 ist eine 32-bit Maschine, daher sind Worte immer 4 Bytes lang
+        // Integer benötigt 4 Byte
+        // Adressen benötigen 4 Byte
+        // Boolean benötigt 4 Byte
+        // Implementieren der Berechnungen mittels Visitor-Pattern oder Type-Switches
         //TODO: Uncomment this when the above exception is removed!
-        //if (showVarAlloc) formatVars(program, table);
+
+        for (GlobalDefinition definition : program.definitions) {
+            if (definition instanceof ProcedureDefinition procedure) {
+                allocateProcedureVars(procedure, table);
+            }
+        }
+        // Afficher les différentes variables
+        formatVars(program, table);
     }
+    private void allocateProcedureVars(ProcedureDefinition procedure, SymbolTable table) {
+
+        ProcedureEntry procedureEntry = (ProcedureEntry) table.lookup(procedure.name);
+
+        SymbolTable localTable = procedureEntry.localTable;
+
+        StackLayout stackLayout = new StackLayout();
+
+        int offset = 0;
+
+        // Wir gehen alle Parameter durch
+        for(int i =0 ; i < procedure.parameters.size() ; i++) {
+    // Wir holen einen Parameter
+            ParameterDefinition parameter = procedure.parameters.get(i);
+            VariableEntry variableEntry = (VariableEntry) localTable.lookup(parameter.name);
+            Type variableType = variableEntry.type ;
+            int paramSize = variableType.byteSize;
+                if(variableEntry.isReference){
+                    paramSize=REFERENCE_BYTESIZE ;
+                }
+
+            variableEntry.offset = offset;
+            stackLayout.argumentAreaSize = (stackLayout.argumentAreaSize == null ? 0 : stackLayout.argumentAreaSize) + paramSize;
+            procedureEntry.parameterTypes.get(i).offset = offset;
+            offset += paramSize;
+        }
+        offset = 0 ;
+        // Allocate space for local variables
+        for (VariableDefinition variable : procedure.variables) {
+            VariableEntry varEntry = (VariableEntry) localTable.lookup(variable.name);
+            Type variableType = varEntry.type ;
+            int varSize = variableType.byteSize;
+            varEntry.offset = -offset - varSize;
+            stackLayout.localVarAreaSize = (stackLayout.localVarAreaSize == null ? 0 : stackLayout.localVarAreaSize) + varSize;
+            offset += varSize;
+        }
+
+        // find the callStatement with the max callSize
+        int sumArgumentSize = 0;
+        for (Statement statement : procedure.body) {
+            if (statement instanceof CallStatement callStatement) {
+                int sizeOfArguments = 0;
+                ProcedureEntry entry = (ProcedureEntry) table.lookup(callStatement.procedureName); // Die aktuelle Procedure  aus der globelen Tabelle holen
+              //  sizeOfArguments = entry.stackLayout.argumentAreaSize ; // Wir holen sein Argumentsize
+
+                for (ParameterType parameterType : entry.parameterTypes) {
+                  //  sizeOfArguments += parameterType.offset;
+                   sizeOfArguments += REFERENCE_BYTESIZE;
+
+                }
+                if (sizeOfArguments > sumArgumentSize) {
+                    sumArgumentSize = sizeOfArguments;
+                }
+            }
+        }
+        stackLayout.outgoingAreaSize = sumArgumentSize;
+
+        procedureEntry.stackLayout.argumentAreaSize = stackLayout.argumentAreaSize;
+        procedureEntry.stackLayout.localVarAreaSize = stackLayout.localVarAreaSize;
+        procedureEntry.stackLayout.outgoingAreaSize = stackLayout.outgoingAreaSize;
+
+    }
+
+
 
     /**
      * Formats and prints the variable allocation to a human-readable format

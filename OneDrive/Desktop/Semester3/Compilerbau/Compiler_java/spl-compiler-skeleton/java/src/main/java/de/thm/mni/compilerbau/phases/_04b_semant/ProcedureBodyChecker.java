@@ -31,14 +31,19 @@ public class ProcedureBodyChecker {
        checkNode(program, globalTable);
         for (GlobalDefinition definition : program.definitions) { // On parcourt le programme pour vérifier s'il y'a une main
             if (definition instanceof ProcedureDefinition procedure) {
+                // check if the main exists
                 if ("main".equals(procedure.name.toString())) {
                     mainExists = true;
-                    if(!procedure.parameters.isEmpty()) { // Si la main() a des parametres
+                    if (!procedure.parameters.isEmpty()) { // Si la main() a des parametres
                         throw SplError.MainMustNotHaveParameters();
                     }
                     break;
                 }
-            }
+            }  else if ( definition instanceof  TypeDefinition typeDefinition ) {
+                         if ("main".equals(typeDefinition.name.toString())) {
+                             throw  SplError.MainIsNotAProcedure() ;
+                         }
+        }
         }
         if (!mainExists) {
             throw  SplError.MainIsMissing() ;
@@ -243,10 +248,6 @@ proc main() {
                 if (!(entry instanceof ProcedureEntry procedureEntry)) {
                     throw SplError.CallOfNonProcedure(callStatement.position, callStatement.procedureName);
                 }
-                // On vérifie si le nom est main
-                if ("main".equals(callStatement.procedureName.toString())) {
-                    throw SplError.MainIsNotAProcedure();
-                }
 
                 //Vérifier que le nombre d'argument conrespond au nombre de parametres
                 int expected = procedureEntry.parameterTypes.size();
@@ -257,10 +258,13 @@ proc main() {
 
                 // On parcourt tous les parametres qu'on a actuellement
                 for (int i = 0; i < actual; i++) {
+                    Expression argument = callStatement.arguments.get(i);
                     Type argumentType = getType(callStatement.arguments.get(i), table);
-                    Type parameterType = procedureEntry.parameterTypes.get(i).type;
-                    if (!argumentType.equals(parameterType)) {
-                        throw SplError.ArgumentTypeMismatch(callStatement.position, callStatement.procedureName, i + 1, parameterType, argumentType);
+                    ParameterType parameterType = procedureEntry.parameterTypes.get(i);
+                    if (argumentType != parameterType.type) {
+                        throw SplError.ArgumentTypeMismatch(callStatement.position, callStatement.procedureName, i + 1, parameterType.type, argumentType);
+                    } else if (parameterType.isReference && !(argument instanceof VariableExpression) ) {
+                        throw SplError.ArgumentMustBeAVariable(callStatement.position, callStatement.procedureName, i + 1);
                     }
                 }
             }
@@ -283,7 +287,7 @@ proc main() {
             }
             case UnaryExpression unaryExpression -> {
                 Type operandType = getType(unaryExpression,table);
-                if (!operandType.equals(PrimitiveType.intType)) {  // On récupere le type de la variable et de l'expression et vérifie si cela passe
+                if ( operandType != PrimitiveType.intType) {  // On récupere le type de la variable et de l'expression et vérifie si cela passe
                     throw SplError.OperandTypeMismatch(unaryExpression.position,unaryExpression.operator,operandType);
                 }
             }

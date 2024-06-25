@@ -6,13 +6,17 @@ type A = array[7] of int;
 type B = array[5] of A;
 
 proc p(ref x: A) {
-  var i: int;
+  var i: int; // i FP - 4
 
   i := 0;
   while (i < 7) {
     x[i] := i;
     i := i + 1;
   }
+
+  p(x);
+
+  //modulo(x, 4, 7);
 }
 
 proc main() {

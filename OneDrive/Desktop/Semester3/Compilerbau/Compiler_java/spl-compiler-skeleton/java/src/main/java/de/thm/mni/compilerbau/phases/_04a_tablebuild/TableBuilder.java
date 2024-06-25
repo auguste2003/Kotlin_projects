@@ -25,7 +25,9 @@ public class TableBuilder {
     private final CommandLineOptions options;
 
     public TableBuilder(CommandLineOptions options) {
+
         this.options = options;
+
     }
 
     public SymbolTable buildSymbolTable(Program program) {
@@ -47,7 +49,6 @@ public class TableBuilder {
              * ProcedureDeclaration - Ajoute une nouvelle procédure.
              * ParameterDeclaration - Ajoute un paramètre de procédure.
              * VariableDeclaration - Ajoute une nouvelle variable.
-             * @param typeDefinition
              */
 
             @Override  // Visite the typeDefinition
@@ -63,6 +64,7 @@ public class TableBuilder {
             @Override // Visit the procedure definition
               public void visit(ProcedureDefinition procedureDefinition) {
                 SymbolTable localTable = new SymbolTable(globalTable); // Déklarer et gérer les variables locales .
+
 
                 // Process parameters first
                 List<ParameterType> parameterTypes = procedureDefinition.parameters.stream()
@@ -102,7 +104,10 @@ public class TableBuilder {
              //   procedureDefinition.body.forEach(statement -> statement.accept(this));
 
                 // Print the symbol table at the end of the procedure
-                printSymbolTableAtEndOfProcedure(procedureDefinition.name, procedureEntry);
+                if( options.phaseOption ==  CommandLineOptions.PhaseOption.TABLES){
+                    printSymbolTableAtEndOfProcedure(procedureDefinition.name, procedureEntry);
+                }
+
             }
 
             Type getType(TypeExpression typeExpression, SymbolTable table ){
