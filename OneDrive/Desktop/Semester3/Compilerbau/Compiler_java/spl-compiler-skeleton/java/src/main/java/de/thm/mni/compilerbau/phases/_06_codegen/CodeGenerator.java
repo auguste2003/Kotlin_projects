@@ -32,6 +32,8 @@ public class CodeGenerator {
 
         //TODO (assignment 6): generate eco32 assembler code for the spl program
 
+        this.output.emitInstruction("add", new Register(8), new Register(8), new Register(9));
+
         throw new NotImplemented();
     }
 

@@ -58,7 +58,9 @@ public class VarAllocator {
             }
         }
         // Afficher les différentes variables
-        formatVars(program, table);
+        if (options.phaseOption == CommandLineOptions.PhaseOption.VARS) {
+            formatVars(program, table);
+        }
     }
     private void allocateProcedureVars(ProcedureDefinition procedure, SymbolTable table) {
 
@@ -106,6 +108,12 @@ public class VarAllocator {
         procedureEntry.stackLayout.outgoingAreaSize = stackLayout.outgoingAreaSize;
     }
 
+    /**
+     * Die Funktion läuft jeden Statement durch und berechnet die Gesamtgröße von dem CallStatement
+     * @param statements
+     * @param globalTable
+     * @return
+     */
     private int getMaxCallSize(List<Statement> statements, SymbolTable globalTable) {
         int maxCallSize = 0;
         for (Statement statement : statements) {
@@ -113,25 +121,25 @@ public class VarAllocator {
                 int callSize = 0;
                 ProcedureEntry calleeEntry = (ProcedureEntry) globalTable.lookup(callStatement.procedureName);
                 for (ParameterType paramType : calleeEntry.parameterTypes) {
-                    callSize += paramType.isReference ? REFERENCE_BYTESIZE : getSize(paramType.type);
+                    callSize += paramType.isReference ? REFERENCE_BYTESIZE : paramType.type.byteSize;
                 }
+
                 if (callSize > maxCallSize) {
                     maxCallSize = callSize;
                 }
             } else if (statement instanceof CompoundStatement compoundStatement) {
                 maxCallSize = Math.max(maxCallSize, getMaxCallSize(compoundStatement.statements, globalTable));
+            } else if (statement instanceof IfStatement ifstatement ) {
+                maxCallSize = Math.max(maxCallSize, getMaxCallSize(List.of(ifstatement.thenPart, ifstatement.elsePart), globalTable ));
+            } else if (statement instanceof  WhileStatement whileStatement ) {
+                maxCallSize = Math.max(maxCallSize, getMaxCallSize(List.of(whileStatement.body), globalTable ));
             }
         }
         return maxCallSize;
     }
 
-    private int getSize(Type type) {
-        if (type instanceof ArrayType) {
-            return ((ArrayType) type).baseType.byteSize;
-        } else {
-            return type.byteSize;
-        }
-    }
+
+
 
 
     /**
