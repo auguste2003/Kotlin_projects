@@ -62,6 +62,12 @@ public class VarAllocator {
             formatVars(program, table);
         }
     }
+
+    /**
+     * Die Methode nimmt jede  Symobole Tabele , läuft die Proceduren und holt jedes mal die Größe von den Variablen , callstatement und Parameter
+     * @param procedure
+     * @param table
+     */
     private void allocateProcedureVars(ProcedureDefinition procedure, SymbolTable table) {
 
         ProcedureEntry procedureEntry = (ProcedureEntry) table.lookup(procedure.name);
@@ -127,11 +133,11 @@ public class VarAllocator {
                 if (callSize > maxCallSize) {
                     maxCallSize = callSize;
                 }
-            } else if (statement instanceof CompoundStatement compoundStatement) {
+            } else if (statement instanceof CompoundStatement compoundStatement) { // Mact eine Rekursion im Falle , dass es eher eine CompoundStatement ist
                 maxCallSize = Math.max(maxCallSize, getMaxCallSize(compoundStatement.statements, globalTable));
-            } else if (statement instanceof IfStatement ifstatement ) {
+            } else if (statement instanceof IfStatement ifstatement ) { // Für die Ifschleife müssen wir auch rekursiv durchgehen
                 maxCallSize = Math.max(maxCallSize, getMaxCallSize(List.of(ifstatement.thenPart, ifstatement.elsePart), globalTable ));
-            } else if (statement instanceof  WhileStatement whileStatement ) {
+            } else if (statement instanceof  WhileStatement whileStatement ) { // Die while-schleife auch
                 maxCallSize = Math.max(maxCallSize, getMaxCallSize(List.of(whileStatement.body), globalTable ));
             }
         }

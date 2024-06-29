@@ -161,7 +161,12 @@ public class ProcedureBodyChecker {
         }
     }
 
-
+    /**
+     * Die Methode gibt den Typ von der aktuellen Expression aus
+     * @param typeExpression
+     * @param table
+     * @return
+     */
     static Type getType(TypeExpression typeExpression, SymbolTable table) {
         switch (typeExpression) {
             // Un NamedTypeExpression fait référence à un type défini par l'utilisateur ou à un type primitif
@@ -198,7 +203,11 @@ proc main() {
     }
 
 
-
+    /**
+     * Die Methode läuft jede Konten und prüft ab es in der globalen Tabelle vorhanden ist .
+     * @param node
+     * @param table
+     */
     public static void checkNode(Node node, SymbolTable table) {
         switch (node) {
             case ArrayAccess arrayAccess -> { // Si le noeud est un array acces , on vérifie son type et son index

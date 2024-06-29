@@ -12,6 +12,10 @@ public class StackLayout {
     public Integer localVarAreaSize = 0;// Für jede lovale Variable gibt es auch einen Offset
     public Integer outgoingAreaSize = 0; // Maximum  an Platzbedarf für die Argumente der aufrufenden Prozeduren
 
+
+    /**
+     * Die richtige Implementierung kann man im script finden
+     */
     /**
      * @return The total size of the stack frame described by this object.
      */
