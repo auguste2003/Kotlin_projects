@@ -3,6 +3,11 @@ package de.thm.mni.compilerbau.phases._06_codegen;
 class Register {
     final int number;
 
+    /**
+     * Kann man benutzen um Register zu generieren
+     * @param number
+     */
+
     Register(int number) {
         this.number = number;
     }

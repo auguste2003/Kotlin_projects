@@ -1,0 +1,7 @@
+proc main() {
+    var arr: array [10] of int;
+    arr[0] := 1;
+    //  arr[1] := arr[0] + 1;
+    //  printi(arr[1]);
+
+}

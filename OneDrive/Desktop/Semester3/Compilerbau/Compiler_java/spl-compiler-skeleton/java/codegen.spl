@@ -1,0 +1,9 @@
+proc main() {
+    printc(3 + 4);
+    getHallo(5,4);
+}
+
+proc getHallo( a: int , i:int ) {
+    printc(a);
+}
+

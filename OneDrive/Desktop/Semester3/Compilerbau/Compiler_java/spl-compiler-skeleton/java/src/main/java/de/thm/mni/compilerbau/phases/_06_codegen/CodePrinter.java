@@ -51,7 +51,7 @@ class CodePrinter {
 
     void emitLabel(String label) {
         outputFile.printf("%s:\n", label);
-    }
+    }  // Für die If- und while-Sschleife .
 
     void emitImport(String label) {
         outputFile.printf("\t.import\t%s\n", label);
