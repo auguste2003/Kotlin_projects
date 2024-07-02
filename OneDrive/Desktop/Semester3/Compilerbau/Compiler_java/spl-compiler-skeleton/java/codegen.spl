@@ -1,9 +1,10 @@
 proc main() {
     printc(3 + 4);
-    getHallo(5,4);
+    getHallo(5,5);
 }
 
 proc getHallo( a: int , i:int ) {
     printc(a);
 }
+
 

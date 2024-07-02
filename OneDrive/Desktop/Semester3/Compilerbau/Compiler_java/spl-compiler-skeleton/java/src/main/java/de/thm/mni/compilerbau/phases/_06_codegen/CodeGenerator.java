@@ -5,10 +5,13 @@ import de.thm.mni.compilerbau.absyn.*;
 import de.thm.mni.compilerbau.table.Entry;
 import de.thm.mni.compilerbau.table.ProcedureEntry;
 import de.thm.mni.compilerbau.table.SymbolTable;
+import de.thm.mni.compilerbau.table.VariableEntry;
 import de.thm.mni.compilerbau.utils.NotImplemented;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is used to generate the assembly code for the compiled program.
@@ -17,7 +20,7 @@ import java.io.PrintWriter;
 public class CodeGenerator {
     final CommandLineOptions options;
     final CodePrinter output;
-
+private  Register actualRegister ;
     /**
      * Initializes the code generator.
      *
@@ -27,6 +30,7 @@ public class CodeGenerator {
     public CodeGenerator(CommandLineOptions options, PrintWriter output) throws IOException {
         this.options = options;
         this.output = new CodePrinter(output);
+        this.actualRegister = Register.FIRST_FREE_USE ;
     }
 
     public void generateCode(Program program, SymbolTable table) {
@@ -70,77 +74,213 @@ public class CodeGenerator {
 
         // Wir brauchen den frame size
         ProcedureEntry procedureEntry =(ProcedureEntry) globaltable.lookup(procedure.name);
-
+        SymbolTable localeTabelle = procedureEntry.localTable ;   // Die lokale Tabelle muss man übergeben
         // Allokieren des Frames
         int frameSize = procedureEntry.stackLayout.frameSize(); // dann holen wir den framesize der Procedure
-        output.emitInstruction("sub", Register.STACK_POINTER, Register.STACK_POINTER, frameSize);
-        output.emitInstruction("stw", Register.FRAME_POINTER, Register.STACK_POINTER, procedureEntry.stackLayout.oldFramePointerOffset());
-        output.emitInstruction("add", Register.FRAME_POINTER, Register.STACK_POINTER, frameSize);
-        output.emitInstruction("stw", Register.RETURN_ADDRESS, Register.FRAME_POINTER, procedureEntry.stackLayout.oldReturnAddressOffset());
+        output.emitInstruction("sub", Register.STACK_POINTER, Register.STACK_POINTER, frameSize,"  ; allocate frame");
+        output.emitInstruction("stw", Register.FRAME_POINTER, Register.STACK_POINTER, procedureEntry.stackLayout.oldFramePointerOffset(),"   ; save old frame pointer");
+        output.emitInstruction("add", Register.FRAME_POINTER, Register.STACK_POINTER, frameSize,"   ; setup new frame pointer");
+        output.emitInstruction("stw", Register.RETURN_ADDRESS, Register.FRAME_POINTER, procedureEntry.stackLayout.oldReturnAddressOffset(),"   ; save return register");
 
         for (Statement statement : procedure.body) {
-            generateStatement(statement);
+            generateStatement(statement,localeTabelle);  // Bekommt die globale Tabelle und generiert den Code dafür
         }
 
         // Wiederherstellung des Rückkehrregisters und des Frame-Pointers, dann Freigabe des Frames
-        output.emitInstruction("ldw", Register.RETURN_ADDRESS, Register.FRAME_POINTER, procedureEntry.stackLayout.oldReturnAddressOffset());
-        output.emitInstruction("ldw", Register.FRAME_POINTER, Register.STACK_POINTER, procedureEntry.stackLayout.oldFramePointerOffset());
-        output.emitInstruction("add", Register.STACK_POINTER, Register.STACK_POINTER, frameSize);
-        output.emitInstruction("jr", Register.RETURN_ADDRESS);
+        output.emitInstruction("ldw", Register.RETURN_ADDRESS, Register.FRAME_POINTER, procedureEntry.stackLayout.oldReturnAddressOffset(),"   ; restore return register");
+        output.emitInstruction("ldw", Register.FRAME_POINTER, Register.STACK_POINTER, procedureEntry.stackLayout.oldFramePointerOffset(),"   ; restore old frame pointer");
+        output.emitInstruction("add", Register.STACK_POINTER, Register.STACK_POINTER, frameSize,"   ; release frame");
+        output.emitInstruction("jr", Register.RETURN_ADDRESS,"   ; return");
     }
 
-    private void generateStatement(Statement statement) {
+    // Exemple d'utilisation dans generateStatement
+    private void generateStatement(Statement statement, SymbolTable localTable) {
         if (statement instanceof CallStatement) {
-            generateCallStatement((CallStatement) statement);
-        }else if (statement instanceof AssignStatement assignment) {
-            if (assignment.target instanceof  ArrayAccess arrayAccess) {
-
-            } else if (assignment.target instanceof NamedVariable) {
-                
+            generateCallStatement((CallStatement) statement,localTable);
+        } else if (statement instanceof AssignStatement assignment) {
+            if (assignment.target instanceof ArrayAccess arrayAccess) {
+                Register targetRegister = getRegisterForVariable(assignment.target,localTable);
+                Register valueRegister = getRegisterForExpression(assignment.value,localTable);
+                generateArrayAccess(arrayAccess, targetRegister,localTable);
+                output.emitInstruction("stw", valueRegister, targetRegister, 0);
+            } else if (assignment.target instanceof NamedVariable namedVariable) {
+                generateNamedOfVariable(namedVariable, localTable);
+                Register targetRegister = getRegisterForVariable(namedVariable,
+                        localTable);
+                Register valueRegister = getRegisterForExpression(assignment.value,
+                        localTable);
+                output.emitInstruction("stw", valueRegister, targetRegister, 0);
             }
-
+        } else if (statement instanceof IfStatement ifStatement) {
+            generateIfStatement(ifStatement, localTable);
+        } else if (statement instanceof WhileStatement whileStatement) {
+            generateWhileStatement(whileStatement, localTable);
         }
-        
-        // Weitere Fälle für andere Arten von Anweisungen hinzufügen
+        // Ajouter d'autres cas pour d'autres types d'instructions
     }
 
-    private void generateCallStatement(CallStatement statement) {
-        // Argumente laden
+
+    private void generateCallStatement(CallStatement statement, SymbolTable localTable) {
+        List<Register> argumentRegisters = new ArrayList<>();
+
+        // Charger les arguments
         for (int i = 0; i < statement.arguments.size(); i++) {
             Expression argument = statement.arguments.get(i);
-            Register argRegister = Register.FIRST_FREE_USE.next();
+            Register argRegister;
 
             if (argument instanceof IntLiteral intLiteral) {
-                // Wenn das Argument ein IntLiteral ist, laden Sie den unmittelbaren Wert
-                Register register = getRegisterForExpression(intLiteral);
-                output.emitInstruction("add", register,new Register(0) ,String.valueOf(intLiteral.value));
+                argRegister = getNextFreeRegister();
+                output.emitInstruction("add", argRegister, Register.NULL, intLiteral.value, "load immediate value");
             } else if (argument instanceof VariableExpression variableExpression) {
-                // Wenn das Argument eine VariableExpression ist, laden Sie den Wert der Variable
-                Register varRegister = getRegisterForVariable(variableExpression.variable);
-                output.emitInstruction("add", varRegister, Register.FRAME_POINTER, 0);
-                output.emitInstruction("ldw", varRegister, varRegister, 0);
+                argRegister = getNextFreeRegister();
+                Register varAddressRegister = getNextFreeRegister();
+                loadVariable(variableExpression.variable, varAddressRegister, localTable);
+                output.emitInstruction("ldw", argRegister, varAddressRegister, 0, "load variable value");
             } else if (argument instanceof BinaryExpression binaryExpression) {
-                // Wenn das Argument eine BinaryExpression ist, berechnen Sie den Ausdruck
-                generateBinaryExpression(binaryExpression, argRegister);
-            }else if (argument instanceof UnaryExpression unaryExpression) {
-
+                argRegister = getNextFreeRegister();
+                generateBinaryExpression(binaryExpression, argRegister,localTable);
+            } else if (argument instanceof UnaryExpression unaryExpression) {
+                argRegister = getNextFreeRegister();
+             //   generateUnaryExpression(unaryExpression, argRegister);
+            } else {
+                throw new UnsupportedOperationException("Unsupported argument type");
             }
-            // Weitere Fälle für andere Argumenttypen hinzufügen
-        }
-        // Argumente auf den Stapel speichern
-        for (int i = 0; i < statement.arguments.size(); i++) {
-            Register argRegister = Register.FIRST_FREE_USE.minus(i);
-            output.emitInstruction("stw", argRegister, Register.STACK_POINTER, i * 4);
+            argumentRegisters.add(argRegister);
         }
 
-        // Funktionsaufruf
-        output.emitInstruction("jal", statement.procedureName.toString());
+        // Stocker les arguments sur la pile
+        for (int i = 0; i < argumentRegisters.size(); i++) {
+            Register argRegister = argumentRegisters.get(i);
+            output.emitInstruction("stw", argRegister, Register.STACK_POINTER, i * 4, "store argument");
+        }
+
+        // Appel de la fonction
+        output.emitInstruction("jal", statement.procedureName.toString(), "call function");
     }
 
-    private void generateBinaryExpression(BinaryExpression expression, Register targetRegister) {
+    private void loadVariable(Variable variable, Register addressRegister, SymbolTable localTable) {
+        if (variable instanceof NamedVariable namedVariable) {
+            VariableEntry varEntry = (VariableEntry) localTable.lookup(namedVariable.name);
+            output.emitInstruction("add", addressRegister, Register.FRAME_POINTER, varEntry.offset, "load variable address");
+        } else {
+            throw new UnsupportedOperationException("Unsupported variable type");
+        }
+    }
+
+    private Register getRegisterForVariable(Variable variable,SymbolTable localTable) {
+        // Beispielmethode, um einen Register für eine Variable zu erhalten
+        // Diese Methode sollte erweitert werden, um tatsächliche Variablenregister zu verwalten
+        Register variableRegister = actualRegister;
+        if(variable instanceof ArrayAccess arrayAccess){
+            return variableRegister ;
+        }else if (variable instanceof NamedVariable namedVariable){
+            VariableEntry varEntry = (VariableEntry) localTable.lookup(namedVariable.name);
+            Register varRegister = getNextFreeRegister();
+            output.emitInstruction("add", varRegister, Register.FRAME_POINTER, varEntry.offset, "load variable address");
+            return varRegister;
+        }
+        actualRegister.next() ;
+        throw new UnsupportedOperationException("Variable  type not supported");
+    }
+
+
+    private void generateIfStatement(IfStatement statement, SymbolTable localTable) {
+        String elseLabel = "else" + statement.hashCode();
+        String endLabel = "endif" + statement.hashCode();
+
+        // Générer le code pour l'expression conditionnelle
+        Register conditionRegister = getRegisterForExpression(statement.condition,localTable);
+
+        // Instruction de saut conditionnel vers le label else
+        output.emitInstruction("bz", conditionRegister, elseLabel);
+
+        // Générer le code pour le bloc then
+        generateStatement(statement.thenPart, localTable);
+
+        // Sauter à la fin de l'instruction if
+        output.emitInstruction("j", endLabel);
+
+        // Label else
+        output.emitLabel(elseLabel);
+        if (statement.elsePart != null) {
+            generateStatement(statement.elsePart, localTable);
+        }
+
+        // Label end if
+        output.emitLabel(endLabel);
+    }
+
+    private void generateWhileStatement(WhileStatement statement, SymbolTable localTable) {
+        String startLabel = "while" + statement.hashCode();
+        String endLabel = "endwhile" + statement.hashCode();
+
+        // Label début de la boucle
+        output.emitLabel(startLabel);
+
+        // Générer le code pour l'expression conditionnelle
+        Register conditionRegister = getRegisterForExpression(statement.condition,localTable);
+
+        // Instruction de saut conditionnel vers la fin de la boucle
+        output.emitInstruction("bz", conditionRegister, endLabel);
+
+        // Générer le code pour le corps de la boucle
+        generateStatement(statement.body, localTable);
+
+        // Sauter au début de la boucle
+        output.emitInstruction("j", startLabel);
+
+        // Label fin de la boucle
+        output.emitLabel(endLabel);
+    }
+
+    private void generateArrayAccess(ArrayAccess arrayAccess, Register targetRegister,SymbolTable localTable) {
+        Register baseRegister = getRegisterForVariable(arrayAccess.array,localTable);
+        Register indexRegister = getRegisterForExpression(arrayAccess.index,localTable);
+
+        // Calcul de l'adresse de l'élément du tableau
+        output.emitInstruction("mul", indexRegister, indexRegister, 4); // Suppose que chaque élément a une taille de 4 octets
+        output.emitInstruction("add", targetRegister, baseRegister, indexRegister);
+    }
+
+    private  void generateNamedOfVariable(NamedVariable namedVariable,SymbolTable localeTabelle) {
+        Register register = Register.FIRST_FREE_USE ;
+       // SymbolTable localTable = new SymbolTable(localeTabelle) ; // Wir benutzen die lokale Tabelle um die Variable zu holen
+    VariableEntry variableEntry = (VariableEntry)localeTabelle.lookup(namedVariable.name);  // Wir holen die Variable aus der Symbole Tabelle
+
+output.emitInstruction("add",register,Register.FRAME_POINTER,variableEntry.offset);
+// if ( variableEntry.type == )
+    //output.emitInstruction("add",register.next(),Register.FRAME_POINTER,variableEntry.offset);
+   // output.emitInstruction("stw",register.next(),register,0);
+
+
+
+}
+
+
+    private Register getNextFreeRegister() {
+        Register nextRegister = actualRegister;
+        actualRegister = actualRegister.next();
+        return nextRegister;
+    }
+
+
+    private void generateBinaryExpression(BinaryExpression expression, Register targetRegister,SymbolTable localTabel) {
         // Berechnung des linken und rechten Operanden
-        Register leftRegister = getRegisterForExpression(expression.leftOperand);
-        Register rightRegister = getRegisterForExpression(expression.rightOperand);
+        Register leftRegister = getNextFreeRegister();
+        Register rightRegister = getNextFreeRegister();
+
+        if (expression.leftOperand instanceof IntLiteral leftLiteral) {
+            output.emitInstruction("add", leftRegister, Register.NULL, leftLiteral.value, "load left operand");
+        } else {
+            leftRegister = getRegisterForExpression(expression.leftOperand,localTabel);
+        }
+
+        if (expression.rightOperand instanceof IntLiteral rightLiteral) {
+            output.emitInstruction("add", rightRegister, Register.NULL, rightLiteral.value, "load right operand");
+        } else {
+            rightRegister = getRegisterForExpression(expression.rightOperand,localTabel);
+        }
+
 
         switch (expression.operator) {
             case ADD:
@@ -176,26 +316,30 @@ public class CodeGenerator {
 
             // Weitere Fälle für andere Operatoren hinzufügen
         }
+
     }
 
-    private Register getRegisterForExpression(Expression expression) {
-        if (expression instanceof IntLiteral intLiteral) {
-            return Register.FIRST_FREE_USE;
+    /**
+     * Ich muss meinen Register verwalten
+     * Ich muss für die Variables auch jedes mal
+     * @param expression
+     * @return
+     */
+    private Register getRegisterForExpression(Expression expression,SymbolTable localTabel) {
+        Register expressionRegister = actualRegister; // Initialisation du registre
+        if (expression instanceof IntLiteral) {
+            return expressionRegister;
         } else if (expression instanceof VariableExpression variableExpression) {
-            return getRegisterForVariable(variableExpression.variable);
+            return getRegisterForVariable(variableExpression.variable,localTabel);
         } else if (expression instanceof BinaryExpression binaryExpression) {
-            Register targetRegister = Register.FIRST_FREE_USE.next();
-            generateBinaryExpression(binaryExpression, targetRegister);
-            return targetRegister;
+            generateBinaryExpression(binaryExpression, expressionRegister,localTabel);
+            return expressionRegister;
+        } else if (expression instanceof UnaryExpression unaryExpression) {
+         //   generateUnaryExpression(unaryExpression, expressionRegister);
+            return expressionRegister;
         }
-        // Weitere Fälle für andere Ausdruckstypen hinzufügen
+        actualRegister = actualRegister.next(); // Incrémenter le registre actuel
         throw new UnsupportedOperationException("Expression type not supported");
-    }
-
-    private Register getRegisterForVariable(Variable variable) {
-        // Beispielmethode, um einen Register für eine Variable zu erhalten
-        // Diese Methode sollte erweitert werden, um tatsächliche Variablenregister zu verwalten
-        return Register.FIRST_FREE_USE;
     }
 
 

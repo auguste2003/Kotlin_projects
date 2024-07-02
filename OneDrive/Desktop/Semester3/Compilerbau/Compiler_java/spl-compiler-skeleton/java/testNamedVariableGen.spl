@@ -1,0 +1,7 @@
+proc main(){
+
+    var b:int ;
+
+    b:= 3 ;
+    //    a := a +b ;
+}
