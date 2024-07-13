@@ -28,7 +28,7 @@ public class ProcedureBodyChecker {
 
     public void checkProcedures(Program program, SymbolTable globalTable) {
         boolean mainExists = false;
-       checkNode(program, globalTable);
+        checkNode(program, globalTable);
         for (GlobalDefinition definition : program.definitions) { // On parcourt le programme pour vérifier s'il y'a une main
             if (definition instanceof ProcedureDefinition procedure) {
                 // check if the main exists
@@ -39,14 +39,14 @@ public class ProcedureBodyChecker {
                     }
                     break;
                 }
-            }  else if ( definition instanceof  TypeDefinition typeDefinition ) {
-                         if ("main".equals(typeDefinition.name.toString())) {
-                             throw  SplError.MainIsNotAProcedure() ;
-                         }
-        }
+            } else if (definition instanceof TypeDefinition typeDefinition) {
+                if ("main".equals(typeDefinition.name.toString())) {
+                    throw SplError.MainIsNotAProcedure();
+                }
+            }
         }
         if (!mainExists) {
-            throw  SplError.MainIsMissing() ;
+            throw SplError.MainIsMissing();
         }
 // Tester le cas oú il n'ya pas de main et il y'a également d'autres cas
     }
@@ -72,13 +72,13 @@ public class ProcedureBodyChecker {
                 if (!leftType.equals(rightType)) { // On vérifie si le type de gauche est le meme que le type de droit
                     throw SplError.OperandTypeMismatch(binaryExpression.position, binaryExpression.operator, leftType, rightType);
                 }
-                if (binaryExpression.operator.isArithmetic()){
-                    return PrimitiveType.intType ; // On vérifie si le type est un Binaryexpression
+                if (binaryExpression.operator.isArithmetic()) {
+                    return PrimitiveType.intType; // On vérifie si le type est un Binaryexpression
                 } else if (binaryExpression.operator.isComparison()) {
-                    return PrimitiveType.boolType ;
+                    return PrimitiveType.boolType;
 
                 }
-                return null ;
+                return null;
             }
             case IntLiteral intLiteral -> {  // On verifie si c'est un intLiteral
                 //        x := 5;       // IntLiteral
@@ -107,8 +107,9 @@ public class ProcedureBodyChecker {
 
     /**
      * La méthode présente retourne les differents types des variables .
+     *
      * @param variable pour les différentes variables de la méthode
-     * @param table la table de symboles
+     * @param table    la table de symboles
      * @return
      */
     static Type getType(Variable variable, SymbolTable table) {
@@ -124,15 +125,14 @@ public class ProcedureBodyChecker {
             if (!(entry instanceof VariableEntry)) { // Si c'est le cas , on vérifi que c'est bien une variable qui est en entré
                 throw SplError.NotAVariable(namedVariable.position, namedVariable.name);
             }
-            if(  ((VariableEntry) entry).type instanceof PrimitiveType primitiveType){
+            if (((VariableEntry) entry).type instanceof PrimitiveType primitiveType) {
                 if (primitiveType.equals(PrimitiveType.intType)) {
                     return PrimitiveType.intType;
-                }else if (primitiveType.equals(PrimitiveType.boolType)){
+                } else if (primitiveType.equals(PrimitiveType.boolType)) {
                     return PrimitiveType.boolType;
                 }
             }
             return ((VariableEntry) entry).type;
-
 
 
         } else if (variable instanceof ArrayAccess arrayAccess) { // On vérifie s'il s'agit d'un aray . Si c'est le cas , on vérifie son index et sa valleur
@@ -142,7 +142,7 @@ public class ProcedureBodyChecker {
              */
 
             // Vérification pour ArrayAccess
-            Type arrayType = (Type)getType(arrayAccess.array, table);
+            Type arrayType = (Type) getType(arrayAccess.array, table);
 
             if (!(arrayType instanceof ArrayType)) {
                 throw SplError.IndexingNonArray(arrayAccess.position, arrayType);
@@ -157,12 +157,13 @@ public class ProcedureBodyChecker {
         }
         // Ajoutez d'autres cas pour d'autres types de variables
         else {
-          return null ;
+            return null;
         }
     }
 
     /**
      * Die Methode gibt den Typ von der aktuellen Expression aus
+     *
      * @param typeExpression
      * @param table
      * @return
@@ -205,6 +206,7 @@ proc main() {
 
     /**
      * Die Methode läuft jede Konten und prüft ab es in der globalen Tabelle vorhanden ist .
+     *
      * @param node
      * @param table
      */
@@ -252,7 +254,7 @@ proc main() {
             case CallStatement callStatement -> {
                 // Implémentation pour CallStatement
                 callStatement.arguments.forEach(argument -> checkNode(argument, table));
-                Entry entry = table.lookup(callStatement.procedureName, SplError.CallOfNonProcedure(callStatement.position, callStatement.procedureName));
+                Entry entry = table.lookup(callStatement.procedureName, SplError.UndefinedIdentifier(callStatement.position, callStatement.procedureName));
                 // Vérification que 'entré est bien une procédure
                 if (!(entry instanceof ProcedureEntry procedureEntry)) {
                     throw SplError.CallOfNonProcedure(callStatement.position, callStatement.procedureName);
@@ -272,7 +274,7 @@ proc main() {
                     ParameterType parameterType = procedureEntry.parameterTypes.get(i);
                     if (argumentType != parameterType.type) {
                         throw SplError.ArgumentTypeMismatch(callStatement.position, callStatement.procedureName, i + 1, parameterType.type, argumentType);
-                    } else if (parameterType.isReference && !(argument instanceof VariableExpression) ) {
+                    } else if (parameterType.isReference && !(argument instanceof VariableExpression)) {
                         throw SplError.ArgumentMustBeAVariable(callStatement.position, callStatement.procedureName, i + 1);
                     }
                 }
@@ -295,34 +297,34 @@ proc main() {
 
             }
             case UnaryExpression unaryExpression -> {
-                Type operandType = getType(unaryExpression,table);
-                if ( operandType != PrimitiveType.intType) {  // On récupere le type de la variable et de l'expression et vérifie si cela passe
-                    throw SplError.OperandTypeMismatch(unaryExpression.position,unaryExpression.operator,operandType);
+                Type operandType = getType(unaryExpression, table);
+                if (operandType != PrimitiveType.intType) {  // On récupere le type de la variable et de l'expression et vérifie si cela passe
+                    throw SplError.OperandTypeMismatch(unaryExpression.position, unaryExpression.operator, operandType);
                 }
             }
             case VariableExpression variableExpression -> {
                 // Implémentation pour VariableExpression
-                checkNode(variableExpression.variable,table); // On va aller vérifier pour les ArrayAcces et namedVariable
+                checkNode(variableExpression.variable, table); // On va aller vérifier pour les ArrayAcces et namedVariable
             }
             case Expression expression -> {
                 // Implémentation pour Expression
-               checkNode(expression,table); // On visite uniquement les expressions
+                checkNode(expression, table); // On visite uniquement les expressions
             }
             case ProcedureDefinition procedureDefinition -> {
                 ProcedureEntry procedureEntry = (ProcedureEntry) table.lookup(procedureDefinition.name);
 
-               SymbolTable localTable = procedureEntry.localTable;
+                SymbolTable localTable = procedureEntry.localTable;
 
                 // Implémentation pour ProcedureDefinition
-                 // Faut une table locale pour cela
-                procedureDefinition.body.forEach(statement -> checkNode(statement,localTable)); // On vérifie les types des statment deans la procedure
-                procedureDefinition.variables.forEach(variableDefinition -> checkNode(variableDefinition,localTable)); // On vérifie les types des variables dans la procedure
-                procedureDefinition.parameters.forEach(parameterDefinition -> checkNode(parameterDefinition,localTable)); // On vérifie les types des parametres dans la procedure
+                // Faut une table locale pour cela
+                procedureDefinition.body.forEach(statement -> checkNode(statement, localTable)); // On vérifie les types des statment deans la procedure
+                procedureDefinition.variables.forEach(variableDefinition -> checkNode(variableDefinition, localTable)); // On vérifie les types des variables dans la procedure
+                procedureDefinition.parameters.forEach(parameterDefinition -> checkNode(parameterDefinition, localTable)); // On vérifie les types des parametres dans la procedure
                 // Implémentation pour ProcedureDefinition
             }
             case TypeDefinition typeDefinition -> {
                 // Implémentation pour TypeDefinition
-                checkNode(typeDefinition.typeExpression,table); // On vérifie s'il y'a dßeja ce type définit
+                checkNode(typeDefinition.typeExpression, table); // On vérifie s'il y'a dßeja ce type définit
             }
             case GlobalDefinition globalDefinition -> {
                 // Implémentation pour GlobalDefinition
@@ -330,16 +332,16 @@ proc main() {
                 /**
                  * Frage : Wie sollte ich mich auf de procedureDefinition und TypeDefinition begrenzen ?
                  */
-                checkNode( globalDefinition, table); // On virifie le type de procedureDefinition et TypeDefinition
+                checkNode(globalDefinition, table); // On virifie le type de procedureDefinition et TypeDefinition
 
             }
-            case VariableDefinition variableDefinition ->{
-              //   Type type = getType(variableDefinition.typeExpression,table);
+            case VariableDefinition variableDefinition -> {
+                //   Type type = getType(variableDefinition.typeExpression,table);
                 // On vérifie qu'on a bien un varibleEntry
-                 Entry variableEntry = table.lookup(variableDefinition.name,SplError.NotAVariable(variableDefinition.position,variableDefinition.name));
-            if(!(variableEntry instanceof VariableEntry)) {
-                throw SplError.NotAVariable(variableDefinition.position,variableDefinition.name);
-            }
+                Entry variableEntry = table.lookup(variableDefinition.name, SplError.NotAVariable(variableDefinition.position, variableDefinition.name));
+                if (!(variableEntry instanceof VariableEntry)) {
+                    throw SplError.NotAVariable(variableDefinition.position, variableDefinition.name);
+                }
             }
             case IfStatement ifStatement -> {
                 // Implémentation pour IfStatement
@@ -404,12 +406,12 @@ proc main() {
                 checkNode(statement, table);
             }
             case TypeExpression typeExpression -> {
-                checkNode(typeExpression,table);
+                checkNode(typeExpression, table);
                 // Implémentation pour TypeExpression
 
             }
             case Variable variable -> {
-                checkNode(variable,table);
+                checkNode(variable, table);
                 // Implémentation pour Variable
             }
             default -> throw new NotImplemented();

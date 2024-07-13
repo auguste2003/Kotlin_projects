@@ -1,0 +1,9 @@
+
+proc main() {
+  var a : int ;
+p(a) ;
+}
+proc p(ref x : int){
+var i:int ;
+x := i+1 ;
+}

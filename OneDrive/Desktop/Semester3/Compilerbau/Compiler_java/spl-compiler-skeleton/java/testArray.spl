@@ -1,0 +1,12 @@
+// Programme SPL d'exemple couvrant tous les types de statements
+
+proc main() {
+    var arr: array [10] of array [7] of array [8] of array [10] of array [7] of array [8] of int;
+    var a: int;
+    var b: int;
+    var c: int;
+    arr[0][3][2][0][3][2] := 1;
+    arr[1][2][3][4][5][6] := 2;
+    arr[9][6][7][8][2][1] := 3;
+
+}

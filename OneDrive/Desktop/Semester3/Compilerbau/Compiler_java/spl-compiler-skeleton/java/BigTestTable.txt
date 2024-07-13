@@ -1,264 +1,313 @@
-Symbol table at end of procedure 'callbyval':
-  level 0
-    x               --> var: ref int
-    y               --> var: ref int
-  level 1
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    int             --> type: int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    time            --> proc: (ref int)
+ package de.thm.mni.compilerbau.phases._06_codegen;
 
-Symbol table at end of procedure 'callbyref':
-  level 0
-    x               --> var: ref int
-    y               --> var: ref int
-  level 1
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    int             --> type: int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
+ import de.thm.mni.compilerbau.CommandLineOptions;
+ import de.thm.mni.compilerbau.absyn.*;
+ import de.thm.mni.compilerbau.table.Entry;
+ import de.thm.mni.compilerbau.table.ProcedureEntry;
+ import de.thm.mni.compilerbau.table.SymbolTable;
+ import de.thm.mni.compilerbau.table.VariableEntry;
+ import de.thm.mni.compilerbau.utils.NotImplemented;
 
-Symbol table at end of procedure 'callArray':
-  level 0
-    v               --> var: ref array [10] of int
-  level 1
-    callArray       --> proc: (ref array [10] of int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    int             --> type: int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
+ import java.io.IOException;
+ import java.io.PrintWriter;
+ import java.util.ArrayDeque;
+ import java.util.ArrayList;
+ import java.util.Deque;
+ import java.util.List;
 
-Symbol table at end of procedure 'callRecursive':
-  level 0
-    n               --> var: ref int
-    res             --> var: ref int
-  level 1
-    callArray       --> proc: (ref array [10] of int)
-    callRecursive   --> proc: (int, ref int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    int             --> type: int
-    matrix          --> type: array [8] of array [8] of int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    tensor          --> type: array [16] of array [8] of array [8] of int
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
 
-Symbol table at end of procedure 'manyargs':
-  level 0
-    i               --> var: ref int
-    j               --> var: ref int
-    k               --> var: ref array [16] of array [8] of array [8] of int
-    l               --> var: ref int
-  level 1
-    callArray       --> proc: (ref array [10] of int)
-    callRecursive   --> proc: (int, ref int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    int             --> type: int
-    manyargs        --> proc: (int, int, ref array [16] of array [8] of array [8] of int, ref int)
-    matrix          --> type: array [8] of array [8] of int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    tensor          --> type: array [16] of array [8] of array [8] of int
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
 
-Symbol table at end of procedure 'hide':
-  level 0
-    hide            --> var: int
-    myInt           --> var: int
-  level 1
-    callArray       --> proc: (ref array [10] of int)
-    callRecursive   --> proc: (int, ref int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    hide            --> proc: ()
-    int             --> type: int
-    manyargs        --> proc: (int, int, ref array [16] of array [8] of array [8] of int, ref int)
-    matrix          --> type: array [8] of array [8] of int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    tensor          --> type: array [16] of array [8] of array [8] of int
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
+ /**
+  * This class is used to generate the assembly code for the compiled program.
+  * This code is emitted via the {@link CodePrinter} in the output field of this class.
+  */
+ public class CodeGenerator {
+     final CommandLineOptions options;
+     final CodePrinter output;
+ private  Register actualRegister ;
+     private Deque<Register> registerStack;
+     /**
+      * Initializes the code generator.
+      *
+      * @param options The command line options passed to the compiler
+      * @param output  The PrintWriter to the output file.
+      */
+     public CodeGenerator(CommandLineOptions options, PrintWriter output) throws IOException {
+         this.options = options;
+         this.output = new CodePrinter(output);
+         this.actualRegister = Register.FIRST_FREE_USE ;
+         initializeRegisterStack();
+     }
 
-Symbol table at end of procedure 'main':
-  level 0
-    i               --> var: int
-    j               --> var: int
-    k               --> var: array [10] of int
-    l               --> var: array [8] of array [8] of int
-    m               --> var: array [5] of array [10] of int
-    n               --> var: array [10] of int
-    t               --> var: array [16] of array [8] of array [8] of int
-  level 1
-    callArray       --> proc: (ref array [10] of int)
-    callRecursive   --> proc: (int, ref int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    hide            --> proc: ()
-    int             --> type: int
-    main            --> proc: ()
-    manyargs        --> proc: (int, int, ref array [16] of array [8] of array [8] of int, ref int)
-    matrix          --> type: array [8] of array [8] of int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    tensor          --> type: array [16] of array [8] of array [8] of int
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
+     private void initializeRegisterStack() {
+         registerStack = new ArrayDeque<>();
+         for (int i = 8; i <= 23; i++) {
+             registerStack.push(new Register(i));
+         }
+     }
 
-Symbol table at end of procedure 'ausgabe':
-  level 0
-    nummer          --> var: ref int
-  level 1
-    ausgabe         --> proc: (int)
-    callArray       --> proc: (ref array [10] of int)
-    callRecursive   --> proc: (int, ref int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    hide            --> proc: ()
-    int             --> type: int
-    main            --> proc: ()
-    manyargs        --> proc: (int, int, ref array [16] of array [8] of array [8] of int, ref int)
-    matrix          --> type: array [8] of array [8] of int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    tensor          --> type: array [16] of array [8] of array [8] of int
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
+     private Register allocateRegister() {
+         if (registerStack.isEmpty()) {
+             throw new RuntimeException("No free registers available");
+         }
+         return registerStack.pop();
+     }
 
-Symbol table at end of procedure 'check':
-  level 0
-    expectedI       --> var: ref int
-    expectedJ       --> var: ref int
-    i               --> var: ref int
-    j               --> var: ref int
-  level 1
-    ausgabe         --> proc: (int)
-    callArray       --> proc: (ref array [10] of int)
-    callRecursive   --> proc: (int, ref int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    check           --> proc: (int, int, int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    exit            --> proc: ()
-    hide            --> proc: ()
-    int             --> type: int
-    main            --> proc: ()
-    manyargs        --> proc: (int, int, ref array [16] of array [8] of array [8] of int, ref int)
-    matrix          --> type: array [8] of array [8] of int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    tensor          --> type: array [16] of array [8] of array [8] of int
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
+     private void freeRegister(Register reg) {
+         registerStack.push(reg);
+     }
 
-Symbol table at end of procedure 'error':
-  level 0
-    expectedI       --> var: ref int
-    i               --> var: ref int
-  level 1
-    ausgabe         --> proc: (int)
-    callArray       --> proc: (ref array [10] of int)
-    callRecursive   --> proc: (int, ref int)
-    callbyref       --> proc: (ref int, ref int)
-    callbyval       --> proc: (int, int)
-    check           --> proc: (int, int, int, int)
-    clearAll        --> proc: (int)
-    drawCircle      --> proc: (int, int, int, int)
-    drawLine        --> proc: (int, int, int, int, int)
-    error           --> proc: (int, int)
-    exit            --> proc: ()
-    hide            --> proc: ()
-    int             --> type: int
-    main            --> proc: ()
-    manyargs        --> proc: (int, int, ref array [16] of array [8] of array [8] of int, ref int)
-    matrix          --> type: array [8] of array [8] of int
-    myInt           --> type: int
-    printc          --> proc: (int)
-    printi          --> proc: (int)
-    readc           --> proc: (ref int)
-    readi           --> proc: (ref int)
-    setPixel        --> proc: (int, int, int)
-    tensor          --> type: array [16] of array [8] of array [8] of int
-    time            --> proc: (ref int)
-    vektor          --> type: array [10] of int
+
+     public void generateCode(Program program, SymbolTable table) {
+         assemblerProlog();
+
+         //TODO (assignment 6): generate eco32 assembler code for the spl program
+
+
+         /**
+          * Bei der Arrayberechnung :
+          * 1. Indexberechnung
+          * 2 . Größe des Arrays
+          * 3. Testen , dass
+          */
+
+         /**
+          * Für die If-schleife springen wir zu einem anderen Lebel
+          * op1 und op2
+          */
+         /**
+          * Für die while Schleife das gleiche .
+          */
+
+         /**
+          *
+          */
+         for(GlobalDefinition definition : program.definitions){
+             if (definition instanceof ProcedureDefinition){
+                 generateProcedure((ProcedureDefinition) definition,table);
+             }
+         }
+       //  this.output.emitInstruction("add", new Register(8), new Register(8), new Register(9));
+
+       //  throw new NotImplemented();
+     }
+
+     private void generateProcedure(ProcedureDefinition procedure,SymbolTable globaltable) {
+         String procedureName = procedure.name.toString();
+         output.emitExport(procedureName); // print the procedure name
+         output.emitLabel(procedureName); // print the label of the procedure
+
+         // Wir brauchen den frame size
+         ProcedureEntry procedureEntry =(ProcedureEntry) globaltable.lookup(procedure.name);
+         SymbolTable localeTabelle = procedureEntry.localTable ;   // Die lokale Tabelle muss man übergeben
+         // Allokieren des Frames
+         int frameSize = procedureEntry.stackLayout.frameSize(); // dann holen wir den framesize der Procedure
+         output.emitInstruction("sub", Register.STACK_POINTER, Register.STACK_POINTER, frameSize,"  ; allocate frame");
+         output.emitInstruction("stw", Register.FRAME_POINTER, Register.STACK_POINTER, procedureEntry.stackLayout.oldFramePointerOffset(),"   ; save old frame pointer");
+         output.emitInstruction("add", Register.FRAME_POINTER, Register.STACK_POINTER, frameSize,"   ; setup new frame pointer");
+         output.emitInstruction("stw", Register.RETURN_ADDRESS, Register.FRAME_POINTER, procedureEntry.stackLayout.oldReturnAddressOffset(),"   ; save return register");
+
+         for (Statement statement : procedure.body) {
+             generateStatement(statement,localeTabelle);  // Bekommt die globale Tabelle und generiert den Code dafür
+         }
+
+         // Wiederherstellung des Rückkehrregisters und des Frame-Pointers, dann Freigabe des Frames
+         output.emitInstruction("ldw", Register.RETURN_ADDRESS, Register.FRAME_POINTER, procedureEntry.stackLayout.oldReturnAddressOffset(),"   ; restore return register");
+         output.emitInstruction("ldw", Register.FRAME_POINTER, Register.STACK_POINTER, procedureEntry.stackLayout.oldFramePointerOffset(),"   ; restore old frame pointer");
+         output.emitInstruction("add", Register.STACK_POINTER, Register.STACK_POINTER, frameSize,"   ; release frame");
+         output.emitInstruction("jr", Register.RETURN_ADDRESS,"   ; return");
+     }
+
+     // Exemple d'utilisation dans generateStatement
+     private void generateStatement(Statement statement, SymbolTable localTable) {
+         if (statement instanceof CallStatement) {
+             generateCallStatement((CallStatement) statement, localTable);
+         }else if (statement instanceof AssignStatement assignment) {
+
+         } else if (statement instanceof IfStatement ifStatement) {
+        //     generateIfStatement(ifStatement, localTable);
+         } else if (statement instanceof WhileStatement whileStatement) {
+      //       generateWhileStatement(whileStatement, localTable);
+         }
+         // Ajouter d'autres cas pour d'autres types d'instructions
+     }
+
+
+     private void generateCallStatement(CallStatement statement, SymbolTable localTable) {
+         List<Register> argumentRegisters = new ArrayList<>();
+
+         // Charger les arguments
+         for (int i = 0; i < statement.arguments.size(); i++) {
+             Expression argument = statement.arguments.get(i);
+             Register argRegister = getNextFreeRegister();
+
+             if (argument instanceof IntLiteral intLiteral) {
+                 output.emitInstruction("add", argRegister, Register.NULL, intLiteral.value, "load immediate value");
+                 output.emitInstruction("stw", argRegister, Register.STACK_POINTER, 0, "store argument #" + i);
+                 previousRegister();
+             } else if (argument instanceof VariableExpression variableExpression) {
+                 Register varAddressRegister = getNextFreeRegister();
+                 loadVariable(variableExpression.variable, varAddressRegister, localTable);
+                 output.emitInstruction("ldw", argRegister, varAddressRegister, 0, "load variable value");
+             } else if (argument instanceof BinaryExpression binaryExpression) {
+                 generateBinaryExpression(binaryExpression, argRegister, localTable);
+                 previousRegister();
+             } else if (argument instanceof UnaryExpression unaryExpression) {
+               //  generateUnaryExpression(unaryExpression, argRegister);
+             } else {
+                 throw new UnsupportedOperationException("Unsupported argument type");
+             }
+             argumentRegisters.add(argRegister);
+         }
+
+         // Stocker les arguments sur la pile
+         for (int i = 0; i < argumentRegisters.size(); i++) {
+             Register argRegister = argumentRegisters.get(i);
+             output.emitInstruction("stw", argRegister, Register.STACK_POINTER, i * 4, "store argument #" + i);
+         }
+
+         // Appel de la fonction
+         output.emitInstruction("jal", statement.procedureName.toString(), "call function");
+     }
+
+
+     private Register getRegisterForVariable(Variable variable,SymbolTable localTable) {
+         // Beispielmethode, um einen Register für eine Variable zu erhalten
+         // Diese Methode sollte erweitert werden, um tatsächliche Variablenregister zu verwalten
+         Register variableRegister = actualRegister;
+         if(variable instanceof ArrayAccess arrayAccess){
+             return variableRegister ;
+         }else if (variable instanceof NamedVariable namedVariable){
+             VariableEntry varEntry = (VariableEntry) localTable.lookup(namedVariable.name);
+             Register varRegister = getNextFreeRegister();
+             output.emitInstruction("add", varRegister, Register.FRAME_POINTER, varEntry.offset, "load variable address");
+             return varRegister;
+         }
+         actualRegister.next() ;
+         throw new UnsupportedOperationException("Variable  type not supported");
+     }
+
+
+
+     private void loadVariable(Variable variable, Register addressRegister, SymbolTable localTable) {
+         if (variable instanceof NamedVariable namedVariable) {
+             VariableEntry varEntry = (VariableEntry) localTable.lookup(namedVariable.name);
+             output.emitInstruction("add", addressRegister, Register.FRAME_POINTER, varEntry.offset, "load variable address");
+         } else {
+             throw new UnsupportedOperationException("Unsupported variable type");
+         }
+     }
+
+     private Register getNextFreeRegister() {
+         Register nextRegister = actualRegister;
+         actualRegister = actualRegister.next();
+         return nextRegister;
+     }
+     private void previousRegister() {
+         Register previousRegister = actualRegister;
+         actualRegister = actualRegister.previous();
+
+     }
+
+
+     private void generateBinaryExpression(BinaryExpression expression, Register targetRegister,SymbolTable localTabel) {
+         // Berechnung des linken und rechten Operanden
+         Register leftRegister = targetRegister;
+         Register rightRegister = getNextFreeRegister();
+
+         if (expression.leftOperand instanceof IntLiteral leftLiteral) {
+             output.emitInstruction("add", leftRegister, Register.NULL, leftLiteral.value, "load left operand");
+         } else {
+             leftRegister = getRegisterForExpression(expression.leftOperand,localTabel);
+         }
+
+         if (expression.rightOperand instanceof IntLiteral rightLiteral) {
+             output.emitInstruction("add", rightRegister, Register.NULL, rightLiteral.value, "load right operand");
+         } else {
+             rightRegister = getRegisterForExpression(expression.rightOperand,localTabel);
+         }
+
+
+         switch (expression.operator) {
+             case ADD:
+                 output.emitInstruction("add", targetRegister, leftRegister, rightRegister);
+                 break;
+             case SUB:
+                 output.emitInstruction("sub", targetRegister, leftRegister, rightRegister);
+                 break;
+             case MUL:
+                 output.emitInstruction("mul", targetRegister, leftRegister, rightRegister);
+                 break;
+             case DIV:
+                 output.emitInstruction("div", targetRegister, leftRegister, rightRegister);
+                 break;
+             case EQU:
+                 output.emitInstruction("eq", targetRegister, leftRegister, rightRegister);
+                 break;
+             case NEQ:
+                 output.emitInstruction("neq", targetRegister, leftRegister, rightRegister);
+                 break;
+             case LST:
+                 output.emitInstruction("lt", targetRegister, leftRegister, rightRegister);
+                 break;
+             case LSE:
+                 output.emitInstruction("le", targetRegister, leftRegister, rightRegister);
+                 break;
+             case GRT:
+                 output.emitInstruction("gt", targetRegister, leftRegister, rightRegister);
+                 break;
+             case GRE:
+                 output.emitInstruction("ge", targetRegister, leftRegister, rightRegister);
+                 break;
+
+             // Weitere Fälle für andere Operatoren hinzufügen
+         }
+         previousRegister() ;
+
+     }
+
+     /**
+      * Ich muss meinen Register verwalten
+      * Ich muss für die Variables auch jedes mal
+      * @param expression
+      * @return
+      */
+     private Register getRegisterForExpression(Expression expression,SymbolTable localTabel) {
+         Register expressionRegister = getNextFreeRegister(); // Initialisation du registre
+         if (expression instanceof IntLiteral) {
+             return expressionRegister;
+         } else if (expression instanceof VariableExpression variableExpression) {
+             return getRegisterForVariable(variableExpression.variable,localTabel);
+         } else if (expression instanceof BinaryExpression binaryExpression) {
+             generateBinaryExpression(binaryExpression, expressionRegister,localTabel);
+             return expressionRegister;
+         } else if (expression instanceof UnaryExpression unaryExpression) {
+          //   generateUnaryExpression(unaryExpression, expressionRegister);
+             return expressionRegister;
+         }
+         actualRegister = actualRegister.next(); // Incrémenter le registre actuel
+         throw new UnsupportedOperationException("Expression type not supported");
+     }
+
+
+     /**
+      * Emits needed import statements, to allow usage of the predefined functions and sets the correct settings
+      * for the assembler.
+      */
+     private void assemblerProlog() {
+         output.emitImport("printi");
+         output.emitImport("printc");
+         output.emitImport("readi");
+         output.emitImport("readc");
+         output.emitImport("exit");
+         output.emitImport("time");
+         output.emitImport("clearAll");
+         output.emitImport("setPixel");
+         output.emitImport("drawLine");
+         output.emitImport("drawCircle");
+         output.emitImport("_indexError");
+         output.emit("");
+         output.emit("\t.code");
+         output.emit("\t.align\t4");
+     }
+ }

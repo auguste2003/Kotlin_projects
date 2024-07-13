@@ -72,7 +72,7 @@ public class TableBuilder {
                             param.typeExpression.accept(this);
                             localTable.enter(param.name,
                                     new VariableEntry(getType(param.typeExpression,localTable), true),
-                                    SplError.NotAParameter(param.position, param.name));
+                                    SplError.RedefinitionOfIdentifier(param.position, param.name));
                             return new ParameterType(getType(param.typeExpression,localTable), param.isReference);
                         }).collect(Collectors.toList()); // Récuperer la liste de parametres
 
@@ -82,7 +82,7 @@ public class TableBuilder {
                             var.typeExpression.accept(this);
                             localTable.enter(var.name,
                                     new VariableEntry(getType(var.typeExpression,localTable), false),
-                                    SplError.NotAVariable(var.position, var.name));
+                                    SplError.RedefinitionOfIdentifier(var.position, var.name));
 
                         }); // Récuperer la liste de parametres
 

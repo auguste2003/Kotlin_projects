@@ -1,0 +1,31 @@
+// Programme SPL d'exemple couvrant tous les types de statements
+type IntArray2D = array [3] of array [3] of int;
+
+proc printArray(ref arr: IntArray2D) {
+    var i: int;
+    var j: int;
+    i := 0;
+    while (i < 3) {
+        j := 0;
+        while (j < 3) {
+            printi(arr[i][j]);
+            printc(' ');
+            j := j + 1;
+        }
+        printc('\n');
+        i := i + 1;
+    }
+}
+
+proc main() {
+
+    var arr2D: IntArray2D;
+
+
+
+
+
+    // Appel de procédure (CallStatement)
+    printArray(arr2D);
+
+}

@@ -1,0 +1,73 @@
+// Programme SPL d'exemple couvrant tous les types de statements
+type IntArray2D = array [3] of array [3] of int;
+
+proc printArray(ref arr: IntArray2D) {
+    var i: int;
+    var j: int;
+    i := 0;
+    while (i < 3) {
+        j := 0;
+        while (j < 3) {
+            printi(arr[i][j]);
+            printc(' ');
+            j := j + 1;
+        }
+        printc('\n');
+        i := i + 1;
+    }
+}
+
+proc main() {
+var x: int;
+var y: int;
+var z: int;
+var arr2D: IntArray2D;
+var i: int;
+var j: int;
+    var a: int;
+    var b: int;
+// Assignation (AssignStatement)
+x := 10;
+y := 20;
+
+// Expression arithmétique (AssignStatement)
+z := x + y;
+
+// Manipulation de tableau multidimensionnel (AssignStatement)
+arr2D[0][0] := x;
+arr2D[0][1] := y;
+arr2D[0][2] := z;
+
+// Instruction conditionnelle (IfStatement)
+if (x < y) {
+z := x * 2;
+} else {
+z := y * 2;
+}
+
+// Boucle avec tableau multidimensionnel (WhileStatement)
+
+i := 0;
+while (i < 3) {
+j := 0;
+while (j < 3) {
+arr2D[i][j] := arr2D[i][j] + 1;
+j := j + 1;
+}
+i := i + 1;
+}
+
+    // Appel de procédure (CallStatement)
+printArray(arr2D);
+
+    // Statement composé (CompoundStatement)
+{
+
+a := 5;
+b := 10;
+arr2D[1][1] := a + b;
+}
+
+// Empty statement (EmptyStatement)
+;
+}

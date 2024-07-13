@@ -1,0 +1,14 @@
+
+proc main() {
+    var x: int;
+    var y: int;
+    var z: int;
+    // Instruction conditionnelle (IfStatement)
+    if (x < y) {
+        z := x * 2;
+    } else {
+        z := y * 2;
+    }
+
+
+}

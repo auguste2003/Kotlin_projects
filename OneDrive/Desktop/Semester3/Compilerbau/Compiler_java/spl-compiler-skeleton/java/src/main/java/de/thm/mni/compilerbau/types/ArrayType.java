@@ -18,6 +18,7 @@ public class ArrayType extends Type {
         super(arraySize * baseType.byteSize);
         this.baseType = baseType;
         this.arraySize = arraySize;
+
     }
 
     @Override

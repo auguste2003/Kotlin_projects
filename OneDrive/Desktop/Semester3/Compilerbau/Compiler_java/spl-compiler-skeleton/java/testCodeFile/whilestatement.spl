@@ -1,0 +1,22 @@
+// Programme SPL d'exemple couvrant tous les types de statements
+type IntArray2D = array [3] of array [3] of int;
+
+proc main() {
+
+    var arr2D: IntArray2D;
+    var i: int;
+    var j: int;
+    // Boucle avec tableau multidimensionnel (WhileStatement)
+
+    i := 0;
+    while (i < 3) {
+        j := 0;
+        while (j < 3) {
+            arr2D[i][j] := arr2D[i][j] + 1;
+            j := j + 1;
+        }
+        i := i + 1;
+    }
+
+
+}

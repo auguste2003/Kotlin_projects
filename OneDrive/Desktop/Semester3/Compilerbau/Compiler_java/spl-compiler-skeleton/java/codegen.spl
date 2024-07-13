@@ -1,10 +1,34 @@
+
+type arr = array[5] of int ;
 proc main() {
-    printc(3 + 4);
-    getHallo(5,5);
+    var arrtest : arr ;
+    arrtest[3] := 6 ;  // ArrayAccess
+    printc(-(3 + 4)); // unaryExpression
+    getHallo(5, 5);
+
 }
 
-proc getHallo( a: int , i:int ) {
+proc getHallo(a: int, i: int) {
     printc(a);
 }
+
+main:
+sub	$29,$29,28		; allocate frame
+stw	$25,$29,4		; save old frame pointer
+add	$25,$29,28		; setup new frame pointer
+stw	$31,$25,-28		; save return register
+add	$8,$25,-20
+add	$9,$0,3
+add	$10,$0,5
+bgeu	$9,$10,_indexError
+mul	$9,$9,4
+add	$8,$8,$9
+add	$9,$0,6
+stw	$9,$8,0
+ldw	$31,$25,-28		; restore return register
+ldw	$25,$29,4		; restore old frame pointer
+add	$29,$29,28		; release frame
+jr	$31			; return
+
 
 

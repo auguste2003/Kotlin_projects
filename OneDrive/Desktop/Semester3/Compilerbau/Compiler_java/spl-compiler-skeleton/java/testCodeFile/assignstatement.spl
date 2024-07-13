@@ -1,0 +1,24 @@
+// Programme SPL d'exemple couvrant tous les types de statements
+type IntArray2D = array [3] of array [3] of int;
+
+proc main() {
+    var x: int;
+    var y: int;
+    var z: int;
+    var arr2D: IntArray2D;
+
+    // Assignation (AssignStatement)
+    x := 10;
+    y := 20;
+
+    // Expression arithmétique (AssignStatement)
+    z := x + y;
+
+    // Manipulation de tableau multidimensionnel (AssignStatement)
+    arr2D[0][0] := x;
+    arr2D[0][1] := y;
+    arr2D[0][2] := z;
+
+
+}
+
