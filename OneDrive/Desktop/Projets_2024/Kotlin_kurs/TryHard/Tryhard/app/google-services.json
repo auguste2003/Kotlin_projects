@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1009187935591",
+    "project_id": "tryhardstart",
+    "storage_bucket": "tryhardstart.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009187935591:android:632b62c207375436a70bc2",
+        "android_client_info": {
+          "package_name": "uqac.dim.tryhardstart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvzEiOq9AkvRFJ-mYEVBAOtyGufHYO2tU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
