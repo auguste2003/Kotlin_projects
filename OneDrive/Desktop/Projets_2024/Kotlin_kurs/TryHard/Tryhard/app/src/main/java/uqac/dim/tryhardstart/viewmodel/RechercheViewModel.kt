@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
@@ -15,7 +16,11 @@ import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 data class Trajet(
     val villeDepart: String,
@@ -66,6 +71,62 @@ class RechercheViewModel():ViewModel(){
     var prixTrajet = mutableStateOf("")
     private val user = FirebaseAuth.getInstance().currentUser
     val userId = user?.uid
+
+    init {
+        initializeTrajets()
+    }
+
+    public fun initializeTrajets() {
+        val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault())
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+
+        val today = LocalDate.now()
+        val options = listOf("Chicoutimi", "Montreal", "Toronto", "Douala", "Yaounde","Berlin", "München", "Hamburg", "Frankfurt", "Köln")
+        val predefinedTrajets = listOf(
+            Trajet(
+                villeDepart = "Chicoutimi",
+                villeArrive = "Montreal",
+                dateDepart = today.format(dateFormatter),
+                heureDepart = "08:00",
+                heureArrivee = "12:00",
+                prix = "50",
+                promotion = false,
+                idBus = "BUS1234"
+            ),
+            Trajet(
+                villeDepart = "Chicoutimi",
+                villeArrive = "Toronto",
+                dateDepart = today.plusDays(1).format(dateFormatter),
+                heureDepart = "09:30",
+                heureArrivee = "11:30",
+                prix = "30",
+                promotion = true,
+                idBus = "BUS5678"
+            ),
+            Trajet(
+                villeDepart = "Chicoutimi",
+                villeArrive = "Douala",
+                dateDepart = today.plusDays(2).format(dateFormatter),
+                heureDepart = "14:00",
+                heureArrivee = "16:00",
+                prix = "25",
+                promotion = false,
+                idBus = "BUS9012"
+            ),
+            Trajet(
+                villeDepart = "Chicoutimi",
+                villeArrive = "Yaounde",
+                dateDepart = today.plusDays(3).format(dateFormatter),
+                heureDepart = "07:45",
+                heureArrivee = "13:00",
+                prix = "60",
+                promotion = true,
+                idBus = "BUS3456"
+            )
+        )
+
+        _trajets.value = predefinedTrajets
+    }
     fun setVilleDepart(value:String){
         _villeDepart.value = value
     }

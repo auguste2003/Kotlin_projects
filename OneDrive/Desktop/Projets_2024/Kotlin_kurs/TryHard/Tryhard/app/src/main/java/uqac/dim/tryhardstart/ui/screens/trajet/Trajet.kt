@@ -28,9 +28,11 @@ import uqac.dim.tryhardstart.viewmodel.RechercheViewModel
 @Composable
 fun Trajet(rechercheViewModel: RechercheViewModel,navController: NavController,adminViewModel: AdminViewModel){
     LaunchedEffect(Unit){
-        rechercheViewModel.rechercherTrajets()
+     //   rechercheViewModel.rechercherTrajets()
+        rechercheViewModel.initializeTrajets()
     }
     val trajets by rechercheViewModel.trajets.collectAsState()
+
     var expanded by remember {
         mutableStateOf(false)
     }
