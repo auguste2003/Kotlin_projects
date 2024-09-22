@@ -12,7 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -21,11 +25,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,66 +48,100 @@ import coil.compose.AsyncImage
 import com.example.finddog.DogViewModel.DogViewModel
 import com.example.finddog.DogViewModel.Status
 import com.example.finddog.data.remote.RetrofitInstance.kt.DogResponceItem
+import dev.chrisbanes.haze.HazeDefaults
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 
 
 @Composable
-fun HomeScreen(dogViewModel: DogViewModel , navController: NavController){
+fun HomeScreen(dogViewModel: DogViewModel, navController: NavController) {
 
-     var status = dogViewModel.status.observeAsState()
 
-   when(status.value){
-      Status.loading -> CircularProgressIndicator()
-       Status.error  ->  ErrorMessage()
-       Status.success -> showAllDogs(dogViewModel,navController)
-       null -> TODO()
-   }
+    var status = dogViewModel.status.observeAsState()
+
+    when (status.value) {
+        Status.loading -> CircularProgressIndicator()
+        Status.error -> ErrorMessage()
+        Status.success -> showAllDogs(dogViewModel, navController)
+        null -> TODO()
+    }
 }
+
 @Composable
-fun ErrorMessage(){
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 50.dp,top = 200.dp)) {
-        Text(text = "An Error Occured when getting the datas ", textAlign = TextAlign.Center, color = Color.Red )
+fun ErrorMessage() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(start = 50.dp, top = 200.dp)
+    ) {
+        Text(
+            text = "An Error Occured when getting the datas ",
+            textAlign = TextAlign.Center,
+            color = Color.Red
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun showAllDogs(dogViewModel: DogViewModel,navController: NavController){
-    var dogResult  = dogViewModel._dogResult.observeAsState()
+fun showAllDogs(dogViewModel: DogViewModel, navController: NavController) {
+    var dogResult = dogViewModel._dogResult.observeAsState()
 
-    Scaffold (
+    val hazeState = remember { HazeState() }
+
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(6.dp),
         topBar = {
-                 TopAppBar(
-                     title = {
-                         Text(
-                             text = "Find your dogs",
-                             textAlign = TextAlign.Center,
-                             color = Color.Black ,
-                             fontWeight = FontWeight.Bold
-                         )
-                     },
-                     actions = {
-                         IconButton(onClick = { /*TODO*/ }) {
-                             Icon(Icons.Default.Settings, contentDescription =null )
-                         }
-                     }
-                 )
+            TopAppBar(
+                colors = TopAppBarDefaults.largeTopAppBarColors(Color.Transparent),
+                modifier = Modifier
+                    .hazeChild(state = hazeState)
+                    .fillMaxWidth(),
+                title = {
+                    Text(
+                        text = "Find your dogs",
+                        textAlign = TextAlign.Center,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = null)
+                    }
+                }
+            )
         },
         bottomBar = {
+            navigationButon(hazeState)
             // ButtomBar
         }
 
-    ){innerPaddings ->
-        Column( modifier = Modifier.padding(innerPaddings)) {
-           LazyColumn (modifier = Modifier.fillMaxWidth()){
-               item {
-                   dogResult.value?.forEach {
-                       DogItem(it,navController, viewModel = dogViewModel)  // Afficher chaque carte
-                   }
-               }
-           }
+    ) { innerPaddings ->
+        Column(
+            modifier = Modifier
+                .padding(innerPaddings)
+                .haze(
+                    state = hazeState,
+                    style = HazeDefaults.style(
+                        backgroundColor = MaterialTheme.colorScheme.surface,
+                        blurRadius = 19.dp
+                    )
+                )
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                item {
+                    dogResult.value?.forEach {
+                        DogItem(
+                            it,
+                            navController,
+                            viewModel = dogViewModel
+                        )  // Afficher chaque carte
+                    }
+                }
+            }
 
 
         }
@@ -110,9 +151,34 @@ fun showAllDogs(dogViewModel: DogViewModel,navController: NavController){
 }
 
 @Composable
-fun DogItem(dog: DogResponceItem,navController: NavController,viewModel: DogViewModel){
+fun navigationButon(hazeState: HazeState) {
 
-    Card (modifier = Modifier
+    NavigationBar(
+       modifier = Modifier
+           .hazeChild(state = hazeState)
+           .fillMaxWidth()
+           .padding(6.dp),
+        containerColor = Color.Transparent,
+    ) {
+        Row(modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly) {
+            IconButton(onClick = { /*TODO*/ }) {
+Icon( Icons.Default.Home, contentDescription =null )
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon( Icons.Default.Favorite, contentDescription =null )
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon( Icons.Default.Settings, contentDescription =null )
+            }
+        }
+    }
+}
+
+@Composable
+fun DogItem(dog: DogResponceItem, navController: NavController, viewModel: DogViewModel) {
+
+    Card(modifier = Modifier
         .fillMaxWidth()
         .padding(3.dp)
         .height(200.dp)
@@ -124,30 +190,37 @@ fun DogItem(dog: DogResponceItem,navController: NavController,viewModel: DogView
         colors = CardDefaults.cardColors(
             containerColor = PurpleGrey80
         )
-        ) {
+    ) {
 
-        Row(modifier = Modifier.fillMaxSize()){
+        Row(modifier = Modifier.fillMaxSize()) {
 
-            AsyncImage(model =dog.url
-                , contentDescription =null
-                , modifier = Modifier.weight(0.6f).
-                fillMaxHeight(),
-                )
-            Column(modifier = Modifier
-                .weight(0.4f)
-                .padding(start = 8.dp)
-                .fillMaxHeight(),
+            AsyncImage(
+                model = dog.url,
+                contentDescription = null,
+                modifier = Modifier
+                    .weight(0.6f)
+                    .fillMaxHeight(),
+            )
+            Column(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .padding(start = 8.dp)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Height : ${dog.height}",
+                Text(
+                    text = "Height : ${dog.height}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp, // á ajuster
-                    color = Color.Black)
-                Text(text = "Height : ${dog.width}",
+                    color = Color.Black
+                )
+                Text(
+                    text = "Height : ${dog.width}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp, // á ajuster
                     modifier = Modifier.padding(top = 4.dp), // Espace avec le texte du haut
-                    color = Color.Black)
+                    color = Color.Black
+                )
             }
         }
 

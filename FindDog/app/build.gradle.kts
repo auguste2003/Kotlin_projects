@@ -81,7 +81,11 @@ dependencies {
 
         val nav_version = "2.8.0"
 
+    // Navigation
         implementation("androidx.navigation:navigation-compose:$nav_version")
 
+    val haze_version = "0.7.0"
+    // Haze to make bluring
+    implementation("dev.chrisbanes.haze:haze-materials:$haze_version")
 
 }
